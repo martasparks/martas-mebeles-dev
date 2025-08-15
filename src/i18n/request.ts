@@ -9,7 +9,6 @@ export default getRequestConfig(async ({requestLocale}) => {
     ? requested
     : routing.defaultLocale;
 
-  // Load translations from database
   const messages = await TranslationSystem.getTranslations(locale as any);
  
   return {

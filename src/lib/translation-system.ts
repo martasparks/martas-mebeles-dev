@@ -2,7 +2,7 @@ import { cache } from 'react';
 import prisma from './prisma';
 
 export type TranslationKey = string;
-export type Locale = 'en' | 'lv' | 'de';
+export type Locale = 'lv' | 'en' | 'ru';
 
 class TranslationSystemClass{
   private getTranslationsFromDb = cache(async (locale: Locale) => {
