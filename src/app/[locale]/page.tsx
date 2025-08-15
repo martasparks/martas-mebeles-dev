@@ -1,8 +1,9 @@
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
  
-export default function HomePage() {
-  const t = useTranslations('HomePage');
+export default async function HomePage() {
+  const t = await getTranslations('HomePage');
+
   return (
     <div>
       <h1>{t('title')}</h1>
