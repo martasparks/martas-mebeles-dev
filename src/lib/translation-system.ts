@@ -2,7 +2,8 @@ import { cache } from 'react';
 import prisma from './prisma';
 
 export type TranslationKey = string;
-export type Locale = 'lv' | 'en' | 'ru';
+export type Locale = 'lv' | 'en' | 'de';
+export type TranslationMessages = Record<string, unknown>;
 
 class TranslationSystemClass{
   private getTranslationsFromDb = cache(async (locale: Locale) => {
@@ -12,25 +13,25 @@ class TranslationSystemClass{
         select: { key: true, value: true }
       });
       
-      return translations.reduce((acc: Record<string, any>, { key, value }) => {
+      return translations.reduce((acc: TranslationMessages, { key, value }) => {
         const keys = key.split('.');
         let current = acc;
         
         for (let i = 0; i < keys.length - 1; i++) {
           if (!current[keys[i]]) current[keys[i]] = {};
-          current = current[keys[i]];
+          current = current[keys[i]] as TranslationMessages;
         }
         
         current[keys[keys.length - 1]] = value;
         return acc;
-      }, {} as Record<string, any>);
+      }, {} as TranslationMessages);
     } catch (error) {
       console.error(`Failed to load translations for ${locale}:`, error);
       return {};
     }
   });
 
-  async getTranslations(locale: Locale): Promise<Record<string, any>> {
+  async getTranslations(locale: Locale): Promise<TranslationMessages> {
     return this.getTranslationsFromDb(locale);
   }
 

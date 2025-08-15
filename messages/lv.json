@@ -1,0 +1,68 @@
+{
+  "Header": {
+    "storeName": "Martas Mēbeles",
+    "products": "Produkti",
+    "categories": "Kategorijas", 
+    "about": "Par mums",
+    "contact": "Kontakti",
+    "cart": "Grozs",
+    "account": "Konts"
+  },
+  "Footer": {
+    "storeName": "Martas Mēbeles",
+    "description": "Kvalitatīvas mēbeles jūsu mājām un birojam. Plašs sortiments par labākajām cenām.",
+    "quickLinks": "Ātrās saites",
+    "products": "Produkti",
+    "categories": "Kategorijas",
+    "about": "Par mums", 
+    "contact": "Kontakti",
+    "customerService": "Klientu serviss",
+    "shipping": "Piegāde",
+    "returns": "Atgriešana",
+    "warranty": "Garantija",
+    "faq": "BUJ",
+    "phone": "Tālrunis",
+    "email": "E-pasts",
+    "address": "Adrese",
+    "allRightsReserved": "Visas tiesības aizsargātas"
+  },
+  "TopBar": {
+    "message": "🎉 BEZMAKSAS piegāde pasūtījumiem virs €50! Ātra piegāde visā Latvijā"
+  },
+  "HomePage": {
+    "Hero": {
+      "title": "Kvalitatīvas mēbeles jūsu mājām",
+      "subtitle": "Atklājiet mūsu plašo mēbeļu sortimentu - no mūsdienīgām līdz klasiskām. Augsta kvalitāte un pievilcīgas cenas.",
+      "shopNow": "Iepirkties tagad",
+      "browseCategories": "Apskatīt kategorijas"
+    },
+    "Categories": {
+      "title": "Populārākās kategorijas",
+      "subtitle": "Izvēlieties no mūsu plašā kategoriju klāsta",
+      "livingRoom": "Viesistaba",
+      "livingRoomDesc": "Ērtas dīvāni, krēsli un galdiņi viesistabai",
+      "bedroom": "Guļamistaba", 
+      "bedroomDesc": "Gultas, skapji un nakts galdiņi",
+      "kitchen": "Virtuve",
+      "kitchenDesc": "Virtuves mēbeles un uzglabāšanas risinājumi",
+      "office": "Birojs",
+      "officeDesc": "Darba galdi un biroja krēsli",
+      "viewCategory": "Apskatīt kategoriju"
+    },
+    "Products": {
+      "title": "Piedāvājuma produkti",
+      "subtitle": "Apskatiet mūsu labākos produktus ar īpašām cenām",
+      "product1Name": "Mūsdienīgs dīvāns",
+      "product1Desc": "Ērts un stilīgs dīvāns jūsu viesistabai",
+      "product2Name": "Koka galds",
+      "product2Desc": "Dabīga koka galds no kvalitatīviem materiāliem",
+      "product3Name": "Biroja krēsls",
+      "product3Desc": "Ergonomisks biroja krēsls ilgām darba stundām", 
+      "product4Name": "Drēbju skapis",
+      "product4Desc": "Plašs skapis ar daudz uzglabāšanas vietas",
+      "sale": "Atlaide",
+      "addToCart": "Pievienot grozam",
+      "viewAllProducts": "Apskatīt visus produktus"
+    }
+  }
+}

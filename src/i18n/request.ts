@@ -1,7 +1,7 @@
 import { getRequestConfig } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { routing } from './routing';
-import { TranslationSystem } from '@lib/translation-system';
+import { TranslationSystem, type Locale as TranslationLocale } from '@lib/translation-system';
 
 export default getRequestConfig(async ({requestLocale}) => {
   const requested = await requestLocale;
@@ -9,7 +9,7 @@ export default getRequestConfig(async ({requestLocale}) => {
     ? requested
     : routing.defaultLocale;
 
-  const messages = await TranslationSystem.getTranslations(locale as any);
+  const messages = await TranslationSystem.getTranslations(locale as TranslationLocale);
  
   return {
     locale,
