@@ -567,6 +567,262 @@ const translations = {
     lv: 'Jūsu Supabase konts:',
     en: 'Your Supabase account:',
     ru: 'Ваш Supabase аккаунт:'
+  },
+
+  // Language Switcher translations
+  'LanguageSwitcher.changeLanguage': {
+    lv: 'Mainīt valodu',
+    en: 'Change language',
+    ru: 'Сменить язык'
+  },
+
+  // Cart Page translations
+  'Cart.title': {
+    lv: 'Iepirkumu grozs',
+    en: 'Shopping Cart',
+    ru: 'Корзина покупок'
+  },
+  'Cart.emptyTitle': {
+    lv: 'Jūsu grozs ir tukšs',
+    en: 'Your cart is empty',
+    ru: 'Ваша корзина пуста'
+  },
+  'Cart.emptyMessage': {
+    lv: 'Pievienojiet produktus, lai sāktu iepirkšanos',
+    en: 'Add products to start shopping',
+    ru: 'Добавьте товары, чтобы начать покупки'
+  },
+  'Cart.continueShopping': {
+    lv: 'Turpināt iepirkšanos',
+    en: 'Continue Shopping',
+    ru: 'Продолжить покупки'
+  },
+  'Cart.product': {
+    lv: 'Produkts',
+    en: 'Product',
+    ru: 'Товар'
+  },
+  'Cart.price': {
+    lv: 'Cena',
+    en: 'Price',
+    ru: 'Цена'
+  },
+  'Cart.quantity': {
+    lv: 'Daudzums',
+    en: 'Quantity',
+    ru: 'Количество'
+  },
+  'Cart.total': {
+    lv: 'Kopā',
+    en: 'Total',
+    ru: 'Итого'
+  },
+  'Cart.subtotal': {
+    lv: 'Starpsumma',
+    en: 'Subtotal',
+    ru: 'Промежуточная сумма'
+  },
+  'Cart.shipping': {
+    lv: 'Piegāde',
+    en: 'Shipping',
+    ru: 'Доставка'
+  },
+  'Cart.freeShipping': {
+    lv: 'Bezmaksas',
+    en: 'Free',
+    ru: 'Бесплатно'
+  },
+  'Cart.grandTotal': {
+    lv: 'Kopējā summa',
+    en: 'Grand Total',
+    ru: 'Общая сумма'
+  },
+  'Cart.removeItem': {
+    lv: 'Noņemt',
+    en: 'Remove',
+    ru: 'Удалить'
+  },
+  'Cart.updateCart': {
+    lv: 'Atjaunināt grozu',
+    en: 'Update Cart',
+    ru: 'Обновить корзину'
+  },
+  'Cart.clearCart': {
+    lv: 'Iztīrīt grozu',
+    en: 'Clear Cart',
+    ru: 'Очистить корзину'
+  },
+  'Cart.proceedToCheckout': {
+    lv: 'Noformēt pasūtījumu',
+    en: 'Proceed to Checkout',
+    ru: 'Оформить заказ'
+  },
+  'Cart.loading': {
+    lv: 'Ielādē...',
+    en: 'Loading...',
+    ru: 'Загрузка...'
+  },
+  'Cart.itemsCount': {
+    lv: 'produkti',
+    en: 'items',
+    ru: 'товаров'
+  },
+
+  // Checkout Page translations
+  'Checkout.title': {
+    lv: 'Noformēt pasūtījumu',
+    en: 'Checkout',
+    ru: 'Оформление заказа'
+  },
+  'Checkout.billingInfo': {
+    lv: 'Norēķinu informācija',
+    en: 'Billing Information',
+    ru: 'Платежная информация'
+  },
+  'Checkout.shippingInfo': {
+    lv: 'Piegādes informācija',
+    en: 'Shipping Information',
+    ru: 'Информация о доставке'
+  },
+  'Checkout.orderSummary': {
+    lv: 'Pasūtījuma kopsavilkums',
+    en: 'Order Summary',
+    ru: 'Сводка заказа'
+  },
+  'Checkout.firstName': {
+    lv: 'Vārds',
+    en: 'First Name',
+    ru: 'Имя'
+  },
+  'Checkout.lastName': {
+    lv: 'Uzvārds',
+    en: 'Last Name',
+    ru: 'Фамилия'
+  },
+  'Checkout.email': {
+    lv: 'E-pasta adrese',
+    en: 'Email Address',
+    ru: 'Адрес электронной почты'
+  },
+  'Checkout.phone': {
+    lv: 'Tālrunis',
+    en: 'Phone',
+    ru: 'Телефон'
+  },
+  'Checkout.address': {
+    lv: 'Adrese',
+    en: 'Address',
+    ru: 'Адрес'
+  },
+  'Checkout.city': {
+    lv: 'Pilsēta',
+    en: 'City',
+    ru: 'Город'
+  },
+  'Checkout.postalCode': {
+    lv: 'Pasta indekss',
+    en: 'Postal Code',
+    ru: 'Почтовый индекс'
+  },
+  'Checkout.country': {
+    lv: 'Valsts',
+    en: 'Country',
+    ru: 'Страна'
+  },
+  'Checkout.sameAsBilling': {
+    lv: 'Tāda pati kā norēķinu adrese',
+    en: 'Same as billing address',
+    ru: 'Как платежный адрес'
+  },
+  'Checkout.paymentMethod': {
+    lv: 'Maksājuma veids',
+    en: 'Payment Method',
+    ru: 'Способ оплаты'
+  },
+  'Checkout.bankTransfer': {
+    lv: 'Bankas pārskaitījums',
+    en: 'Bank Transfer',
+    ru: 'Банковский перевод'
+  },
+  'Checkout.cardPayment': {
+    lv: 'Maksājums ar karti',
+    en: 'Card Payment',
+    ru: 'Оплата картой'
+  },
+  'Checkout.cashOnDelivery': {
+    lv: 'Skaidra nauda piegādes brīdī',
+    en: 'Cash on Delivery',
+    ru: 'Наличными при доставке'
+  },
+  'Checkout.orderNotes': {
+    lv: 'Pasūtījuma piezīmes',
+    en: 'Order Notes',
+    ru: 'Примечания к заказу'
+  },
+  'Checkout.orderNotesPlaceholder': {
+    lv: 'Papildu informācija par pasūtījumu (neobligāti)',
+    en: 'Additional information about your order (optional)',
+    ru: 'Дополнительная информация о заказе (необязательно)'
+  },
+  'Checkout.subtotal': {
+    lv: 'Starpsumma',
+    en: 'Subtotal',
+    ru: 'Промежуточная сумма'
+  },
+  'Checkout.shipping': {
+    lv: 'Piegāde',
+    en: 'Shipping',
+    ru: 'Доставка'
+  },
+  'Checkout.freeShipping': {
+    lv: 'Bezmaksas',
+    en: 'Free',
+    ru: 'Бесплатно'
+  },
+  'Checkout.total': {
+    lv: 'Kopā',
+    en: 'Total',
+    ru: 'Итого'
+  },
+  'Checkout.placeOrder': {
+    lv: 'Apstiprināt pasūtījumu',
+    en: 'Place Order',
+    ru: 'Оформить заказ'
+  },
+  'Checkout.processingOrder': {
+    lv: 'Apstrādā pasūtījumu...',
+    en: 'Processing order...',
+    ru: 'Обработка заказа...'
+  },
+  'Checkout.backToCart': {
+    lv: 'Atgriezties pie groza',
+    en: 'Back to Cart',
+    ru: 'Вернуться в корзину'
+  },
+  'Checkout.required': {
+    lv: 'Obligāts',
+    en: 'Required',
+    ru: 'Обязательно'
+  },
+  'Checkout.invalidEmail': {
+    lv: 'Nederīga e-pasta adrese',
+    en: 'Invalid email address',
+    ru: 'Неверный адрес электронной почты'
+  },
+  'Checkout.orderSuccess': {
+    lv: 'Pasūtījums veiksmīgi noformēts!',
+    en: 'Order placed successfully!',
+    ru: 'Заказ успешно оформлен!'
+  },
+  'Checkout.orderError': {
+    lv: 'Neizdevās noformēt pasūtījumu',
+    en: 'Failed to place order',
+    ru: 'Не удалось оформить заказ'
+  },
+  'Checkout.loading': {
+    lv: 'Ielādē...',
+    en: 'Loading...',
+    ru: 'Загружается...'
   }
 };
 

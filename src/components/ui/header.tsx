@@ -4,6 +4,8 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
+import LanguageSwitcher from './language-switcher';
+import { CartDropdown } from '@/components/cart/cart-dropdown';
 
 export function Header() {
   const t = useTranslations('Header');
@@ -41,9 +43,8 @@ export function Header() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <Link href="/cart" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
-              {t('cart')} (0)
-            </Link>
+            <LanguageSwitcher />
+            <CartDropdown />
             
             {!loading && (
               <>
@@ -64,28 +65,34 @@ export function Header() {
                     </button>
                     
                     {isUserMenuOpen && (
-                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border">
-                        <Link
-                          href="/profile"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      <>
+                        <div 
+                          className="fixed inset-0 z-40" 
                           onClick={() => setIsUserMenuOpen(false)}
-                        >
-                          {t('profile')}
-                        </Link>
-                        <Link
-                          href="/orders"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          onClick={() => setIsUserMenuOpen(false)}
-                        >
-                          {t('orders')}
-                        </Link>
-                        <button
-                          onClick={handleSignOut}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          {t('signOut')}
-                        </button>
-                      </div>
+                        ></div>
+                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border">
+                          <Link
+                            href="/profile"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => setIsUserMenuOpen(false)}
+                          >
+                            {t('profile')}
+                          </Link>
+                          <Link
+                            href="/orders"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => setIsUserMenuOpen(false)}
+                          >
+                            {t('orders')}
+                          </Link>
+                          <button
+                            onClick={handleSignOut}
+                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            {t('signOut')}
+                          </button>
+                        </div>
+                      </>
                     )}
                   </div>
                 ) : (

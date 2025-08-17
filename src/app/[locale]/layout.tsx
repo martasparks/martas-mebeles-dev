@@ -2,6 +2,7 @@ import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { ToastProvider } from '@/contexts/ToastContext';
 import { TopBar } from '@/components/ui/top-bar';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
@@ -23,16 +24,18 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <body className="min-h-screen bg-gray-50">
         <NextIntlClientProvider>
-          <AuthProvider>
-            <div className="flex flex-col min-h-screen">
-              <TopBar />
-              <Header />
-              <main className="flex-grow">
-                {children}
-              </main>
-              <Footer />
-            </div>
-          </AuthProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <div className="flex flex-col min-h-screen">
+                <TopBar />
+                <Header />
+                <main className="flex-grow">
+                  {children}
+                </main>
+                <Footer />
+              </div>
+            </AuthProvider>
+          </ToastProvider>
         </NextIntlClientProvider>
       </body>
     </html>

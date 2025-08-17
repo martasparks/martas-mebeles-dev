@@ -111,25 +111,28 @@
     }
   },
   "Profile": {
-    "title": "Profil",
-    "customerProfileNotFound": "Kundenprofil nicht gefunden",
-    "profileNotCreated": "Ihr Kundenprofil wurde noch nicht erstellt. Klicken Sie auf die Schaltfläche oben, um es zu erstellen.",
-    "createProfile": "Profil erstellen",
-    "creating": "Erstellen...",
-    "fullName": "Vollständiger Name",
+    "title": "Профиль",
+    "customerProfileNotFound": "Профиль клиента не найден",
+    "profileNotCreated": "Ваш профиль клиента еще не создан. Нажмите кнопку выше, чтобы создать его.",
+    "createProfile": "Создать профиль",
+    "creating": "Создание...",
+    "fullName": "Полное имя",
     "email": "E-Mail",
-    "phone": "Telefon",
-    "country": "Land",
-    "city": "Stadt",
-    "preferredLanguage": "Bevorzugte Sprache",
-    "accountCreated": "Konto erstellt",
-    "emailVerified": "E-Mail bestätigt",
-    "lastLogin": "Letzte Anmeldung",
-    "never": "Nie",
-    "yes": "Ja",
-    "no": "Nein",
-    "notProvided": "Nicht angegeben",
-    "loading": "Laden...",
-    "supabaseAccount": "Ihr Supabase-Konto:"
+    "phone": "Телефон",
+    "country": "Страна",
+    "city": "Город",
+    "preferredLanguage": "Предпочитаемый язык",
+    "accountCreated": "Аккаунт создан",
+    "emailVerified": "E-Mail подтвержден",
+    "lastLogin": "Последний вход",
+    "never": "Никогда",
+    "yes": "Да",
+    "no": "Нет",
+    "notProvided": "Не указано",
+    "loading": "Загрузка...",
+    "supabaseAccount": "Ваш Supabase аккаунт:"
+  },
+  "LanguageSwitcher": {
+    "changeLanguage": "Сменить язык"
   }
 }

@@ -131,5 +131,8 @@
     "notProvided": "Not provided",
     "loading": "Loading...",
     "supabaseAccount": "Your Supabase account:"
+  },
+  "LanguageSwitcher": {
+    "changeLanguage": "Change language"
   }
 }

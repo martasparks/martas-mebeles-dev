@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
+import { AddToCartButton } from '@/components/cart/add-to-cart-button';
 
 interface Product {
   id: string;
@@ -91,9 +92,17 @@ export function FeaturedProducts() {
                   )}
                 </div>
                 
-                <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-md font-medium hover:bg-blue-700 transition-colors">
+                <AddToCartButton 
+                  product={{
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    imageUrl: product.imageUrl
+                  }}
+                  className="w-full"
+                >
                   {t('addToCart')}
-                </button>
+                </AddToCartButton>
               </div>
             </div>
           ))}

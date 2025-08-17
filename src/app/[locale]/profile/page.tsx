@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Link } from '@/i18n/navigation';
 
 export default function ProfilePage() {
   const { user, customer, loading, refreshCustomer } = useAuth();
@@ -52,6 +53,21 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Profile Navigation */}
+        <div className="mb-6">
+          <nav className="flex space-x-4">
+            <span className="px-4 py-2 bg-blue-600 text-white rounded-md font-medium">
+              Profila informācija
+            </span>
+            <Link
+              href="/profile/orders"
+              className="px-4 py-2 text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50 transition-colors font-medium"
+            >
+              Mani pasūtījumi
+            </Link>
+          </nav>
+        </div>
+
         <div className="bg-white shadow rounded-lg">
           <div className="px-6 py-4 border-b border-gray-200">
             <div className="flex justify-between items-center">

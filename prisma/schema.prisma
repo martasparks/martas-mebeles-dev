@@ -50,7 +50,123 @@ model Customer {
   updatedAt      DateTime @updatedAt
   lastLoginAt    DateTime?
 
+  // Relations
+  cart           Cart?
+  orders         Order[]
+
   @@index([email])
   @@index([supabaseUserId])
   @@map("customers")
+}
+
+model Cart {
+  id         String     @id @default(cuid())
+  customerId String?    // NULL for guest users
+  guestId    String?    // UUID for guest users
+  items      CartItem[]
+  
+  // Timestamps
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  
+  // One customer can have only one active cart
+  customer   Customer?  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  @@unique([customerId]) // Ensure one cart per customer
+  @@index([guestId])
+  @@map("carts")
+}
+
+model CartItem {
+  id        String  @id @default(cuid())
+  cartId    String
+  productId String  // Product identifier (can be SKU, ID, etc.)
+  name      String  // Product name snapshot
+  price     Decimal @db.Decimal(10, 2) // Price snapshot at time of adding
+  quantity  Int     @default(1)
+  imageUrl  String? // Product image snapshot
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  
+  @@unique([cartId, productId]) // Prevent duplicate items in same cart
+  @@index([cartId])
+  @@map("cart_items")
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  orderNumber String      @unique // Human-readable order number
+  customerId  String?     // NULL for guest orders
+  
+  // Customer info (snapshot at time of order)
+  customerEmail     String
+  customerFirstName String?
+  customerLastName  String?
+  customerPhone     String?
+  
+  // Billing address
+  billingAddress    String
+  billingCity       String
+  billingPostalCode String
+  billingCountry    String   @default("LV")
+  
+  // Shipping address
+  shippingAddress    String
+  shippingCity       String
+  shippingPostalCode String
+  shippingCountry    String   @default("LV")
+  
+  // Order details
+  subtotal      Decimal @db.Decimal(10, 2)
+  shippingCost  Decimal @db.Decimal(10, 2) @default(0.00)
+  totalAmount   Decimal @db.Decimal(10, 2)
+  
+  // Payment and status
+  paymentMethod String // 'bank_transfer', 'card', 'cash_on_delivery'
+  orderStatus   String @default("pending") // 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'
+  paymentStatus String @default("pending") // 'pending', 'paid', 'failed', 'refunded'
+  
+  // Optional fields
+  orderNotes    String?
+  
+  // Items
+  items         OrderItem[]
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  customer      Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  
+  @@index([customerId])
+  @@index([orderNumber])
+  @@index([orderStatus])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  productId String  // Product identifier
+  name      String  // Product name snapshot
+  price     Decimal @db.Decimal(10, 2) // Price snapshot
+  quantity  Int
+  imageUrl  String? // Product image snapshot
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  @@index([orderId])
+  @@map("order_items")
 }
