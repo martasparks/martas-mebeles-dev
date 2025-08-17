@@ -6,7 +6,12 @@
     "about": "Par mums",
     "contact": "Kontakti",
     "cart": "Grozs",
-    "account": "Konts"
+    "account": "Konts",
+    "login": "Pierakstīties",
+    "register": "Reģistrēties",
+    "profile": "Profils",
+    "orders": "Pasūtījumi",
+    "signOut": "Izrakstīties"
   },
   "Footer": {
     "storeName": "Martas Mēbeles",
@@ -63,6 +68,46 @@
       "sale": "Atlaide",
       "addToCart": "Pievienot grozam",
       "viewAllProducts": "Apskatīt visus produktus"
+    }
+  },
+  "Auth": {
+    "login": {
+      "title": "Pierakstīties",
+      "subtitle": "Ieejiet savā kontā",
+      "signupLink": "reģistrējieties",
+      "email": "E-pasta adrese",
+      "password": "Parole",
+      "forgotPassword": "Aizmirsi paroli?",
+      "loading": "Notiek pieteikšanās...",
+      "submit": "Pierakstīties"
+    },
+    "register": {
+      "title": "Reģistrēties",
+      "subtitle": "Izveidojiet jaunu kontu",
+      "loginLink": "pierakstieties",
+      "fullName": "Pilns vārds",
+      "email": "E-pasta adrese",
+      "password": "Parole",
+      "confirmPassword": "Apstiprināt paroli",
+      "passwordMismatch": "Paroles nesakrīt",
+      "passwordTooShort": "Parolei jābūt vismaz 6 simbolus garai",
+      "loading": "Notiek reģistrācija...",
+      "submit": "Reģistrēties",
+      "successTitle": "Reģistrācija veiksmīga!",
+      "successMessage": "Lūdzu, pārbaudiet savu e-pastu, lai apstiprinātu kontu.",
+      "backToLogin": "Atgriezties pie pierakstīšanās"
+    },
+    "verifyEmail": {
+      "title": "Apstipriniet savu e-pastu",
+      "instruction": "Lūdzu, pārbaudiet savu e-pasta kontu un noklikšķiniet uz apstiprinājuma saites.",
+      "instructionWithEmail": "Mēs nosūtījām apstiprinājuma saiti uz:",
+      "emailLabel": "E-pasta adrese",
+      "emailPlaceholder": "Ievadiet savu e-pasta adresi",
+      "resendButton": "Nosūtīt vēlreiz",
+      "resending": "Nosūta...",
+      "alreadyVerified": "Jau apstiprinājāt savu e-pastu?",
+      "loginLink": "Pierakstieties",
+      "backToHome": "Atgriezties uz sākumlapu"
     }
   }
 }

@@ -6,7 +6,12 @@
     "about": "About",
     "contact": "Contact", 
     "cart": "Cart",
-    "account": "Account"
+    "account": "Account",
+    "login": "Login",
+    "register": "Register",
+    "profile": "Profile",
+    "orders": "Orders",
+    "signOut": "Sign Out"
   },
   "Footer": {
     "storeName": "Marta's Furniture",
@@ -63,6 +68,46 @@
       "sale": "Sale",
       "addToCart": "Add to Cart",
       "viewAllProducts": "View All Products"
+    }
+  },
+  "Auth": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Sign in to your account",
+      "signupLink": "sign up",
+      "email": "Email address",
+      "password": "Password",
+      "forgotPassword": "Forgot password?",
+      "loading": "Signing in...",
+      "submit": "Sign In"
+    },
+    "register": {
+      "title": "Register",
+      "subtitle": "Create a new account",
+      "loginLink": "sign in",
+      "fullName": "Full name",
+      "email": "Email address",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 6 characters long",
+      "loading": "Creating account...",
+      "submit": "Register",
+      "successTitle": "Registration successful!",
+      "successMessage": "Please check your email to confirm your account.",
+      "backToLogin": "Back to login"
+    },
+    "verifyEmail": {
+      "title": "Verify your email",
+      "instruction": "Please check your email and click the confirmation link.",
+      "instructionWithEmail": "We sent a confirmation link to:",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "Enter your email address",
+      "resendButton": "Resend email",
+      "resending": "Sending...",
+      "alreadyVerified": "Already verified your email?",
+      "loginLink": "Sign in",
+      "backToHome": "Back to home"
     }
   }
 }

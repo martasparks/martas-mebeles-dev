@@ -20,3 +20,37 @@ model Translation {
   @@index([namespace, locale])
   @@map("translations")
 }
+
+model Customer {
+  id             String   @id @default(cuid())
+  supabaseUserId String   @unique // Supabase auth user ID
+  email          String   @unique
+  firstName      String?
+  lastName       String?
+  fullName       String?
+  phone          String?
+  dateOfBirth    DateTime?
+  
+  // Address information
+  address        String?
+  city           String?
+  postalCode     String?
+  country        String?  @default("LV")
+  
+  // Preferences
+  preferredLocale String? @default("lv")
+  newsletterSubscribed Boolean @default(false)
+  
+  // Customer status
+  isActive       Boolean  @default(true)
+  emailVerified  Boolean  @default(false)
+  
+  // Timestamps
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  lastLoginAt    DateTime?
+
+  @@index([email])
+  @@index([supabaseUserId])
+  @@map("customers")
+}

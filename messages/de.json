@@ -6,7 +6,12 @@
     "about": "Über uns", 
     "contact": "Kontakt",
     "cart": "Warenkorb",
-    "account": "Konto"
+    "account": "Konto",
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "profile": "Profil",
+    "orders": "Bestellungen",
+    "signOut": "Abmelden"
   },
   "Footer": {
     "storeName": "Martas Möbel",
@@ -63,6 +68,46 @@
       "sale": "Angebot",
       "addToCart": "In den Warenkorb",
       "viewAllProducts": "Alle Produkte ansehen"
+    }
+  },
+  "Auth": {
+    "login": {
+      "title": "Anmelden",
+      "subtitle": "Bei Ihrem Konto anmelden",
+      "signupLink": "registrieren",
+      "email": "E-Mail-Adresse",
+      "password": "Passwort",
+      "forgotPassword": "Passwort vergessen?",
+      "loading": "Anmeldung läuft...",
+      "submit": "Anmelden"
+    },
+    "register": {
+      "title": "Registrieren",
+      "subtitle": "Neues Konto erstellen",
+      "loginLink": "anmelden",
+      "fullName": "Vollständiger Name",
+      "email": "E-Mail-Adresse",
+      "password": "Passwort",
+      "confirmPassword": "Passwort bestätigen",
+      "passwordMismatch": "Passwörter stimmen nicht überein",
+      "passwordTooShort": "Passwort muss mindestens 6 Zeichen lang sein",
+      "loading": "Konto wird erstellt...",
+      "submit": "Registrieren",
+      "successTitle": "Registrierung erfolgreich!",
+      "successMessage": "Bitte überprüfen Sie Ihre E-Mail, um Ihr Konto zu bestätigen.",
+      "backToLogin": "Zurück zur Anmeldung"
+    },
+    "verifyEmail": {
+      "title": "E-Mail bestätigen",
+      "instruction": "Bitte überprüfen Sie Ihre E-Mail und klicken Sie auf den Bestätigungslink.",
+      "instructionWithEmail": "Wir haben einen Bestätigungslink gesendet an:",
+      "emailLabel": "E-Mail-Adresse",
+      "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein",
+      "resendButton": "E-Mail erneut senden",
+      "resending": "Wird gesendet...",
+      "alreadyVerified": "E-Mail bereits bestätigt?",
+      "loginLink": "Anmelden",
+      "backToHome": "Zurück zur Startseite"
     }
   }
 }
