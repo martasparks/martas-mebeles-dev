@@ -10,7 +10,7 @@ datasource db {
 model Translation {
   id        String   @id @default(cuid())
   key       String   // e.g., "HomePage.title"
-  locale    String   // e.g., "en", "lv", "de"
+  locale    String   // e.g., "en", "lv", "ru"
   value     String   // translated text
   namespace String?  // optional grouping, e.g., "HomePage"
   createdAt DateTime @default(now())

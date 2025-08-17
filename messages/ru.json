@@ -96,6 +96,40 @@
       "successTitle": "Registrierung erfolgreich!",
       "successMessage": "Bitte überprüfen Sie Ihre E-Mail, um Ihr Konto zu bestätigen.",
       "backToLogin": "Zurück zur Anmeldung"
+    },
+    "verifyEmail": {
+      "title": "E-Mail bestätigen",
+      "instruction": "Bitte überprüfen Sie Ihre E-Mail und klicken Sie auf den Bestätigungslink.",
+      "instructionWithEmail": "Wir haben einen Bestätigungslink gesendet an:",
+      "emailLabel": "E-Mail-Adresse",
+      "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein",
+      "resendButton": "E-Mail erneut senden",
+      "resending": "Wird gesendet...",
+      "alreadyVerified": "E-Mail bereits bestätigt?",
+      "loginLink": "Anmelden",
+      "backToHome": "Zurück zur Startseite"
     }
+  },
+  "Profile": {
+    "title": "Profil",
+    "customerProfileNotFound": "Kundenprofil nicht gefunden",
+    "profileNotCreated": "Ihr Kundenprofil wurde noch nicht erstellt. Klicken Sie auf die Schaltfläche oben, um es zu erstellen.",
+    "createProfile": "Profil erstellen",
+    "creating": "Erstellen...",
+    "fullName": "Vollständiger Name",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "country": "Land",
+    "city": "Stadt",
+    "preferredLanguage": "Bevorzugte Sprache",
+    "accountCreated": "Konto erstellt",
+    "emailVerified": "E-Mail bestätigt",
+    "lastLogin": "Letzte Anmeldung",
+    "never": "Nie",
+    "yes": "Ja",
+    "no": "Nein",
+    "notProvided": "Nicht angegeben",
+    "loading": "Laden...",
+    "supabaseAccount": "Ihr Supabase-Konto:"
   }
 }

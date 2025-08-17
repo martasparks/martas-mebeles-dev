@@ -109,5 +109,27 @@
       "loginLink": "Pierakstieties",
       "backToHome": "Atgriezties uz sākumlapu"
     }
+  },
+  "Profile": {
+    "title": "Profils",
+    "customerProfileNotFound": "Klienta profils nav atrasts",
+    "profileNotCreated": "Jūsu klienta profils vēl nav izveidots. Noklikšķiniet uz pogas augšā, lai to izveidotu.",
+    "createProfile": "Izveidot profilu",
+    "creating": "Izveido...",
+    "fullName": "Pilns vārds",
+    "email": "E-pasts",
+    "phone": "Tālrunis",
+    "country": "Valsts",
+    "city": "Pilsēta",
+    "preferredLanguage": "Vēlamā valoda",
+    "accountCreated": "Konts izveidots",
+    "emailVerified": "E-pasts apstiprināts",
+    "lastLogin": "Pēdējā pieteikšanās",
+    "never": "Nekad",
+    "yes": "Jā",
+    "no": "Nē",
+    "notProvided": "Nav norādīts",
+    "loading": "Ielādē...",
+    "supabaseAccount": "Jūsu Supabase konts:"
   }
 }

@@ -39,7 +39,7 @@ export default function ProfilePage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <p className="mt-4 text-gray-600">{t('loading')}</p>
         </div>
       </div>
     );
@@ -55,14 +55,14 @@ export default function ProfilePage() {
         <div className="bg-white shadow rounded-lg">
           <div className="px-6 py-4 border-b border-gray-200">
             <div className="flex justify-between items-center">
-              <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
               {!customer && (
                 <button
                   onClick={handleCreateProfile}
                   disabled={creating}
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
                 >
-                  {creating ? 'Creating...' : 'Create Profile'}
+                  {creating ? t('creating') : t('createProfile')}
                 </button>
               )}
             </div>
@@ -76,54 +76,54 @@ export default function ProfilePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Customer Profile Not Found</h3>
-                  <p className="text-gray-500 mb-4">Your customer profile hasn't been created yet. Click the button above to create it.</p>
-                  <p className="text-sm text-gray-400">Your Supabase account: <span className="font-mono">{user.email}</span></p>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">{t('customerProfileNotFound')}</h3>
+                  <p className="text-gray-500 mb-4">{t('profileNotCreated')}</p>
+                  <p className="text-sm text-gray-400">{t('supabaseAccount')} <span className="font-mono">{user.email}</span></p>
                 </div>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Full Name
+                  {t('fullName')}
                 </label>
                 <p className="text-gray-900">
-                  {customer?.fullName || user.user_metadata?.full_name || 'Not provided'}
+                  {customer?.fullName || user.user_metadata?.full_name || t('notProvided')}
                 </p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
+                  {t('email')}
                 </label>
                 <p className="text-gray-900">{customer?.email || user.email}</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Phone
+                  {t('phone')}
                 </label>
                 <p className="text-gray-900">
-                  {customer?.phone || 'Not provided'}
+                  {customer?.phone || t('notProvided')}
                 </p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Country
+                  {t('country')}
                 </label>
                 <p className="text-gray-900">
-                  {customer?.country || 'Not provided'}
+                  {customer?.country || t('notProvided')}
                 </p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  City
+                  {t('city')}
                 </label>
                 <p className="text-gray-900">
-                  {customer?.city || 'Not provided'}
+                  {customer?.city || t('notProvided')}
                 </p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Preferred Language
+                  {t('preferredLanguage')}
                 </label>
                 <p className="text-gray-900">
                   {customer?.preferredLocale || 'lv'}
@@ -131,7 +131,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Account Created
+                  {t('accountCreated')}
                 </label>
                 <p className="text-gray-900">
                   {customer?.createdAt ? new Date(customer.createdAt).toLocaleDateString() : new Date(user.created_at).toLocaleDateString()}
@@ -139,20 +139,20 @@ export default function ProfilePage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Verified
+                  {t('emailVerified')}
                 </label>
                 <p className="text-gray-900">
-                  {customer?.emailVerified || user.email_confirmed_at ? 'Yes' : 'No'}
+                  {customer?.emailVerified || user.email_confirmed_at ? t('yes') : t('no')}
                 </p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Last Login
+                  {t('lastLogin')}
                 </label>
                 <p className="text-gray-900">
                   {customer?.lastLoginAt 
                     ? new Date(customer.lastLoginAt).toLocaleString() 
-                    : 'Never'
+                    : t('never')
                   }
                 </p>
               </div>

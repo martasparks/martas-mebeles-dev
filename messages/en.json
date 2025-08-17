@@ -109,5 +109,27 @@
       "loginLink": "Sign in",
       "backToHome": "Back to home"
     }
+  },
+  "Profile": {
+    "title": "Profile",
+    "customerProfileNotFound": "Customer Profile Not Found",
+    "profileNotCreated": "Your customer profile hasn't been created yet. Click the button above to create it.",
+    "createProfile": "Create Profile",
+    "creating": "Creating...",
+    "fullName": "Full Name",
+    "email": "Email",
+    "phone": "Phone",
+    "country": "Country",
+    "city": "City",
+    "preferredLanguage": "Preferred Language",
+    "accountCreated": "Account Created",
+    "emailVerified": "Email Verified",
+    "lastLogin": "Last Login",
+    "never": "Never",
+    "yes": "Yes",
+    "no": "No",
+    "notProvided": "Not provided",
+    "loading": "Loading...",
+    "supabaseAccount": "Your Supabase account:"
   }
 }
