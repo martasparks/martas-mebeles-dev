@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { generateInvoicePDF } from '@/lib/pdf-generator';
+// import { generateInvoicePDF } from '@/lib/pdf-generator';
 
 // GET /api/orders/[orderNumber]/invoice - Generate PDF invoice
 export async function GET(
@@ -34,16 +34,13 @@ export async function GET(
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
-    // Generate PDF
-    const pdfBuffer = generateInvoicePDF(order);
+    // Generate PDF - temporarily disabled
+    // const pdfBuffer = generateInvoicePDF(order);
     
-    return new NextResponse(pdfBuffer, {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="rekini-${orderNumber}.pdf"`,
-      },
-    });
+    return NextResponse.json({ 
+      error: 'PDF generation temporarily disabled',
+      order: order 
+    }, { status: 501 });
   } catch (error) {
     console.error('Error generating invoice:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

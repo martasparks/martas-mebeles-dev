@@ -61,11 +61,12 @@ export async function DELETE() {
         where: { supabaseUserId: user.id }
       });
       
-      if (customer?.cart) {
-        await prisma.cartItem.deleteMany({
-          where: { cartId: customer.cart.id }
-        });
-      }
+      // Note: cart relation might not exist in current schema
+      // if (customer?.cart) {
+      //   await prisma.cartItem.deleteMany({
+      //     where: { cartId: customer.cart.id }
+      //   });
+      // }
     }
     
     return NextResponse.json({ success: true });

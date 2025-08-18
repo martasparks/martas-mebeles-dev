@@ -43,11 +43,11 @@ export function useCart() {
         const data = await response.json();
         if (data.cart && data.cart.items) {
           // Update local cart with merged data
-          const serverItems = data.cart.items.map((item: any) => ({
+          const serverItems = data.cart.items.map((item: Record<string, unknown>) => ({
             id: item.id,
             productId: item.productId,
             name: item.name,
-            price: parseFloat(item.price),
+            price: parseFloat(item.price as string),
             quantity: item.quantity,
             imageUrl: item.imageUrl,
           }));
@@ -68,7 +68,7 @@ export function useCart() {
   };
   
   const generateGuestId = (): string => {
-    const { v4: uuidv4 } = require('uuid');
+    const uuidv4 = crypto.randomUUID;
     const guestId = uuidv4();
     if (typeof window !== 'undefined') {
       localStorage.setItem('cart_guest_id', guestId);

@@ -21,23 +21,19 @@ export default async function LocaleLayout({
   }
  
   return (
-    <html lang={locale}>
-      <body className="min-h-screen bg-gray-50">
-        <NextIntlClientProvider>
-          <ToastProvider>
-            <AuthProvider>
-              <div className="flex flex-col min-h-screen">
-                <TopBar />
-                <Header />
-                <main className="flex-grow">
-                  {children}
-                </main>
-                <Footer />
-              </div>
-            </AuthProvider>
-          </ToastProvider>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <div className="flex flex-col min-h-screen">
+            <TopBar />
+            <Header />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </AuthProvider>
+      </ToastProvider>
+    </NextIntlClientProvider>
   );
 }

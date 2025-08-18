@@ -205,11 +205,11 @@ export const useCartStore = create<CartState>()(
           if (response.ok) {
             const data = await response.json();
             if (data.cart && data.cart.items) {
-              const serverItems: CartItem[] = data.cart.items.map((item: any) => ({
+              const serverItems: CartItem[] = data.cart.items.map((item: Record<string, unknown>) => ({
                 id: item.id,
                 productId: item.productId,
                 name: item.name,
-                price: parseFloat(item.price),
+                price: parseFloat(item.price as string),
                 quantity: item.quantity,
                 imageUrl: item.imageUrl,
               }));

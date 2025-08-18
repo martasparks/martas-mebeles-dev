@@ -29,6 +29,7 @@ type AuthContextType = {
   user: User | null;
   customer: Customer | null;
   loading: boolean;
+  isAdmin: boolean;
   signOut: () => Promise<void>;
   refreshCustomer: () => Promise<void>;
 };
@@ -40,6 +41,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
+
+  const isAdmin = user?.user_metadata?.is_super_admin === true;
 
   const fetchCustomerProfile = async (userId: string, updateLogin = true) => {
     try {
@@ -151,6 +154,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user,
     customer,
     loading,
+    isAdmin,
     signOut,
     refreshCustomer,
   };

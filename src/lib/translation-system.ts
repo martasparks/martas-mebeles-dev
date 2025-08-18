@@ -2,7 +2,7 @@ import { cache } from 'react';
 import prisma from './prisma';
 
 export type TranslationKey = string;
-export type Locale = 'lv' | 'en' | 'de';
+export type Locale = 'lv' | 'en' | 'ru';
 export type TranslationMessages = Record<string, unknown>;
 
 class TranslationSystemClass{
