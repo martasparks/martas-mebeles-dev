@@ -11,6 +11,9 @@ export function Header() {
   const t = useTranslations('Header');
   const { user, customer, signOut, loading } = useAuth();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  
+  // Debug: check what translations we're getting
+  console.log('Header - Products translation:', t('products'));
 
   const handleSignOut = async () => {
     await signOut();

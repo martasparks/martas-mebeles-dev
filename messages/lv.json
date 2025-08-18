@@ -134,5 +134,16 @@
   },
   "LanguageSwitcher": {
     "changeLanguage": "Mainīt valodu"
+  },
+  "Cart": {
+    "title": "Iepirkumu grozs",
+    "empty": "Jūsu grozs ir tukšs",
+    "addItems": "Pievienojiet produktus, lai sāktu iepirkšanos",
+    "shopNow": "Iepirkties tagad",
+    "total": "Kopā",
+    "checkout": "Noformēt pasūtījumu",
+    "remove": "Noņemt",
+    "quantity": "Daudzums",
+    "price": "Cena"
   }
 }

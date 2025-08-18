@@ -18,6 +18,10 @@ export default function LanguageSwitcher() {
   const t = useTranslations('LanguageSwitcher');
 
   const currentLanguage = languages.find(lang => lang.code === locale);
+  
+  // Debug
+  console.log('LanguageSwitcher - Current locale:', locale);
+  console.log('LanguageSwitcher - Current language:', currentLanguage?.name);
 
   const handleLanguageChange = (newLocale: string) => {
     const pathWithoutLocale = pathname.replace(/^\/[a-z]{2}/, '');

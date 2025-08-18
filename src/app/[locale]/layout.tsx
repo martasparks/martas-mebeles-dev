@@ -1,4 +1,5 @@
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -20,8 +21,10 @@ export default async function LocaleLayout({
     notFound();
   }
  
+  const messages = await getMessages();
+
   return (
-    <NextIntlClientProvider>
+    <NextIntlClientProvider locale={locale} messages={messages}>
       <ToastProvider>
         <AuthProvider>
           <div className="flex flex-col min-h-screen">

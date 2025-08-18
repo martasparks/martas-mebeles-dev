@@ -66,6 +66,15 @@ export async function POST(request: NextRequest) {
       namespace
     );
 
+    // Trigger revalidation to refresh all pages with new translations
+    try {
+      await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/revalidate`, {
+        method: 'POST'
+      });
+    } catch (error) {
+      console.warn('Could not trigger revalidation:', error);
+    }
+
     return NextResponse.json(translation);
   } catch (error) {
     console.error('Error creating/updating translation:', error);

@@ -134,5 +134,16 @@
   },
   "LanguageSwitcher": {
     "changeLanguage": "Change language"
+  },
+  "Cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "addItems": "Add products to start shopping",
+    "shopNow": "Shop Now",
+    "total": "Total",
+    "checkout": "Checkout",
+    "remove": "Remove",
+    "quantity": "Quantity",
+    "price": "Price"
   }
 }
