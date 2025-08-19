@@ -9,17 +9,37 @@ export function TopBar() {
   const [currentPosition, setCurrentPosition] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const startTimeRef = useRef<number>(Date.now());
+  const [message, setMessage] = useState<string>('');
+  const [locale, setLocale] = useState('lv');
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const currentLocale = window.location.pathname.split('/')[1] || 'lv';
+        if (['lv', 'en', 'ru'].includes(currentLocale)) {
+          setLocale(currentLocale);
+        }
+        
+        const response = await fetch('/api/topbar');
+        const messages = await response.json();
+        setMessage(messages[currentLocale] || messages.lv || t('message'));
+      } catch (error) {
+        console.error('Error fetching top bar message:', error);
+        setMessage(t('message'));
+      }
+    };
+    
+    fetchMessages();
+  }, [t]);
 
   useEffect(() => {
     let animationFrame: number;
 
     const animate = () => {
       if (!isPaused && scrollRef.current) {
-        const elapsed = (Date.now() - startTimeRef.current) / 1000; // seconds
-        const duration = 20; // 20 seconds for full cycle
+        const elapsed = (Date.now() - startTimeRef.current) / 1000;
+        const duration = 20;
         const progress = (elapsed % duration) / duration;
-        
-        // Move from 100% to -100% (200% total distance)
         const position = 100 - (progress * 200);
         setCurrentPosition(position);
         scrollRef.current.style.transform = `translateX(${position}%)`;
@@ -36,9 +56,8 @@ export function TopBar() {
   };
 
   const handleMouseLeave = () => {
-    // Adjust start time to continue from current position
     const duration = 20;
-    const progress = (100 - currentPosition) / 200; // Current progress in cycle
+    const progress = (100 - currentPosition) / 200;
     startTimeRef.current = Date.now() - (progress * duration * 1000);
     setIsPaused(false);
   };
@@ -51,8 +70,8 @@ export function TopBar() {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <span className="text-sm font-medium">
-          {t('message')} • {t('message')} • {t('message')} • {t('message')} • {t('message')} • {t('message')} • {t('message')} • {t('message')} • 
+        <span className="text-md font-medium">
+          {message}
         </span>
       </div>
     </div>

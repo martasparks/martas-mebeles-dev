@@ -1,0 +1,14 @@
+[
+  {
+    "id": "cmeily2ku0000uo692jzywv3m",
+    "title": "Mūsu pirmais slaideris 123",
+    "description": "Šis ir mūsu pirmais izveidotais slaideris",
+    "desktopImageUrl": "https://martas-mebeles-dev.s3.eu-north-1.amazonaws.com/slider/1755619729633-1lidjbf6k63.jpg",
+    "mobileImageUrl": "https://martas-mebeles-dev.s3.eu-north-1.amazonaws.com/slider/1755619729962-qsiloehxiaq.jpg",
+    "linkUrl": null,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2025-08-19T13:56:55.534Z",
+    "updatedAt": "2025-08-19T16:08:50.055Z"
+  }
+]

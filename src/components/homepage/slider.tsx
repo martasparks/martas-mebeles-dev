@@ -2,33 +2,47 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import { PlaceholderSlider } from '@/components/ui/placeholder-slider';
+
+interface SliderTranslation {
+  id: string;
+  locale: string;
+  title?: string;
+  description?: string;
+}
 
 interface Slider {
   id: string;
-  title?: string;
-  description?: string;
   desktopImageUrl: string;
   mobileImageUrl: string;
   linkUrl?: string;
   sortOrder: number;
   isActive: boolean;
+  translations: SliderTranslation[];
 }
 
 export function HomeSlider() {
+  const t = useTranslations('Slider');
   const [sliders, setSliders] = useState<Slider[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [locale, setLocale] = useState('lv');
 
   useEffect(() => {
     fetchSliders();
+    // Detect current locale from URL or browser
+    const currentLocale = window.location.pathname.split('/')[1] || 'lv';
+    if (['lv', 'en', 'ru'].includes(currentLocale)) {
+      setLocale(currentLocale);
+    }
   }, []);
 
   useEffect(() => {
     if (sliders.length > 1) {
       const interval = setInterval(() => {
         setCurrentSlide((prev) => (prev + 1) % sliders.length);
-      }, 5000); // Auto-advance every 5 seconds
+      }, 5000);
 
       return () => clearInterval(interval);
     }
@@ -38,7 +52,7 @@ export function HomeSlider() {
     try {
       const response = await fetch('/api/slider');
       const data = await response.json();
-      console.log('Slider API response:', data);
+      console.log('Slider API response:', JSON.stringify(data, null, 2));
       setSliders(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching sliders:', error);
@@ -64,7 +78,7 @@ export function HomeSlider() {
     return (
       <section className="relative h-[400px] md:h-[600px] bg-gray-200 animate-pulse">
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-gray-500">Ielādē...</div>
+          <div className="text-gray-500">{t('loading')}</div>
         </div>
       </section>
     );
@@ -80,45 +94,67 @@ export function HomeSlider() {
     return null;
   }
 
-  const SlideContent = () => (
-    <div className="relative h-[400px] md:h-[600px] overflow-hidden">
-      {/* Mobile Image */}
-      <div className="block md:hidden">
-        <img
-          src={currentSlider.mobileImageUrl}
-          alt={currentSlider.title || `Slide ${currentSlide + 1}`}
-          className="w-full h-full object-cover"
-        />
-      </div>
-      
-      {/* Desktop Image */}
-      <div className="hidden md:block">
-        <img
-          src={currentSlider.desktopImageUrl}
-          alt={currentSlider.title || `Slide ${currentSlide + 1}`}
-          className="w-full h-full object-cover"
-        />
-      </div>
+  const getSafeUrl = (url?: string) => {
+    if (!url) return '';
+    try {
+      if (url.startsWith('//')) {
+        return (typeof window !== 'undefined' && window.location.protocol === 'https:' ? 'https:' : 'http:') + url;
+      }
+      if (typeof window !== 'undefined' && window.location.protocol === 'https:' && url.startsWith('http://')) {
+        return url.replace('http://', 'https://');
+      }
+      return url;
+    } catch {
+      return url;
+    }
+  };
 
-      {/* Overlay Content */}
-      {(currentSlider.title || currentSlider.description) && (
-        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-          <div className="text-center text-white px-4 max-w-4xl">
-            {currentSlider.title && (
-              <h1 className="text-2xl md:text-5xl font-bold mb-4">
-                {currentSlider.title}
-              </h1>
-            )}
-            {currentSlider.description && (
-              <p className="text-lg md:text-xl mb-6 max-w-2xl mx-auto">
-                {currentSlider.description}
-              </p>
-            )}
+  const SlideContent = () => {
+    const mobileSrc = getSafeUrl(currentSlider.mobileImageUrl);
+    const desktopSrc = getSafeUrl(currentSlider.desktopImageUrl);
+    
+    // Get translation for current locale
+    const translation = currentSlider.translations.find(t => t.locale === locale) ||
+                       currentSlider.translations.find(t => t.locale === 'lv') ||
+                       currentSlider.translations[0];
+    
+    return (
+      <div className="relative h-[400px] md:h-[600px] overflow-hidden">
+        <picture>
+          <source media="(min-width: 768px)" srcSet={desktopSrc} />
+          <img
+            src={mobileSrc || desktopSrc}
+            alt={translation?.title || `Slide ${currentSlide + 1}`}
+            className="absolute inset-0 w-full h-full object-cover z-0"
+            onError={(e) => {
+              console.error('Image failed to load:', e.currentTarget.src);
+              e.currentTarget.style.display = 'none';
+            }}
+            onLoad={() => console.log('Slider image loaded successfully')}
+            loading={currentSlide === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        </picture>
+
+        {(translation?.title || translation?.description) && (
+          <div className="absolute inset-0 flex items-center justify-center z-10">
+            <div className="text-center text-white px-4 max-w-4xl bg-gray rounded-lg py-8 px-6 backdrop-blur-sm">
+              {translation?.title && (
+                <h1 className="text-2xl md:text-5xl font-bold mb-4 text-black drop-shadow-lg">
+                  {translation.title}
+                </h1>
+              )}
+              {translation?.description && (
+                <p className="text-lg md:text-xl mb-6 max-w-2xl mx-auto text-black drop-shadow-lg">
+                  {translation.description}
+                </p>
+              )}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
-  );
+        )}
+      </div>
+    );
+  };
 
   return (
     <section className="relative">
@@ -130,13 +166,12 @@ export function HomeSlider() {
         <SlideContent />
       )}
 
-      {/* Navigation Arrows */}
       {sliders.length > 1 && (
         <>
           <button
             onClick={goToPrevious}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-2 rounded-full shadow-lg transition-all z-10"
-            aria-label="Previous slide"
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all z-10"
+            aria-label={t('previousSlide')}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -145,8 +180,8 @@ export function HomeSlider() {
           
           <button
             onClick={goToNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-2 rounded-full shadow-lg transition-all z-10"
-            aria-label="Next slide"
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all z-10"
+            aria-label={t('nextSlide')}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -155,7 +190,6 @@ export function HomeSlider() {
         </>
       )}
 
-      {/* Dots Indicator */}
       {sliders.length > 1 && (
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
           {sliders.map((_, index) => (
@@ -165,9 +199,9 @@ export function HomeSlider() {
               className={`w-3 h-3 rounded-full transition-all ${
                 index === currentSlide
                   ? 'bg-white'
-                  : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+                  : 'bg-white/50 hover:bg-white/75'
               }`}
-              aria-label={`Go to slide ${index + 1}`}
+              aria-label={t('goToSlide', { number: index + 1 })}
             />
           ))}
         </div>

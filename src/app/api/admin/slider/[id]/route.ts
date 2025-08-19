@@ -10,8 +10,14 @@ export async function PUT(
     const { id } = await params;
     const formData = await request.formData();
     
-    const title = formData.get('title') as string;
-    const description = formData.get('description') as string;
+    // Get translations for all languages
+    const titleLv = formData.get('title_lv') as string;
+    const descriptionLv = formData.get('description_lv') as string;
+    const titleEn = formData.get('title_en') as string;
+    const descriptionEn = formData.get('description_en') as string;
+    const titleRu = formData.get('title_ru') as string;
+    const descriptionRu = formData.get('description_ru') as string;
+    
     const linkUrl = formData.get('linkUrl') as string;
     const sortOrder = parseInt(formData.get('sortOrder') as string) || 0;
     const isActive = formData.get('isActive') === 'true';
@@ -21,7 +27,10 @@ export async function PUT(
     
     // Get existing slider
     const existingSlider = await prisma.slider.findUnique({
-      where: { id }
+      where: { id },
+      include: {
+        translations: true
+      }
     });
     
     if (!existingSlider) {
@@ -69,19 +78,48 @@ export async function PUT(
       mobileImageUrl = await uploadToS3(imageBuffer, fileName, mobileImage.type, 'slider');
     }
     
-    // Update slider in database
+    // Update slider and translations in database
     const updatedSlider = await prisma.slider.update({
       where: { id },
       data: {
-        title: title || null,
-        description: description || null,
         desktopImageUrl,
         mobileImageUrl,
         linkUrl: linkUrl || null,
         sortOrder,
         isActive
+      },
+      include: {
+        translations: true
       }
     });
+
+    // Update translations for all locales
+    const locales = [
+      { locale: 'lv', title: titleLv, description: descriptionLv },
+      { locale: 'en', title: titleEn, description: descriptionEn },
+      { locale: 'ru', title: titleRu, description: descriptionRu }
+    ];
+
+    for (const { locale, title, description } of locales) {
+      await prisma.sliderTranslation.upsert({
+        where: {
+          sliderId_locale: {
+            sliderId: id,
+            locale: locale
+          }
+        },
+        update: {
+          title: title || null,
+          description: description || null
+        },
+        create: {
+          sliderId: id,
+          locale: locale,
+          title: title || null,
+          description: description || null
+        }
+      });
+    }
     
     return NextResponse.json(updatedSlider);
   } catch (error) {

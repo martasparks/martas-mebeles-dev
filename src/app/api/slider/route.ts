@@ -5,6 +5,9 @@ export async function GET() {
   try {
     const sliders = await prisma.slider.findMany({
       where: { isActive: true },
+      include: {
+        translations: true
+      },
       orderBy: { sortOrder: 'asc' }
     });
     

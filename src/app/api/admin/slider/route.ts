@@ -5,6 +5,9 @@ import prisma from '@/lib/prisma';
 export async function GET() {
   try {
     const sliders = await prisma.slider.findMany({
+      include: {
+        translations: true
+      },
       orderBy: { sortOrder: 'asc' }
     });
     
@@ -19,8 +22,14 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     
-    const title = formData.get('title') as string;
-    const description = formData.get('description') as string;
+    // Get translations for all languages
+    const titleLv = formData.get('title_lv') as string;
+    const descriptionLv = formData.get('description_lv') as string;
+    const titleEn = formData.get('title_en') as string;
+    const descriptionEn = formData.get('description_en') as string;
+    const titleRu = formData.get('title_ru') as string;
+    const descriptionRu = formData.get('description_ru') as string;
+    
     const linkUrl = formData.get('linkUrl') as string;
     const sortOrder = parseInt(formData.get('sortOrder') as string) || 0;
     const isActive = formData.get('isActive') === 'true';
@@ -68,13 +77,35 @@ export async function POST(request: NextRequest) {
     // Create slider in database    
     const slider = await prisma.slider.create({
       data: {
-        title: title || null,
-        description: description || null,
         desktopImageUrl,
         mobileImageUrl,
         linkUrl: linkUrl || null,
         sortOrder,
-        isActive
+        isActive,
+        translations: {
+          createMany: {
+            data: [
+              {
+                locale: 'lv',
+                title: titleLv || null,
+                description: descriptionLv || null
+              },
+              {
+                locale: 'en',
+                title: titleEn || null,
+                description: descriptionEn || null
+              },
+              {
+                locale: 'ru',
+                title: titleRu || null,
+                description: descriptionRu || null
+              }
+            ]
+          }
+        }
+      },
+      include: {
+        translations: true
       }
     });
     

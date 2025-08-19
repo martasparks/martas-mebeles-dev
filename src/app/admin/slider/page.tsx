@@ -4,15 +4,21 @@ import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { useToast } from '@/contexts/ToastContext';
 import { useState, useEffect } from 'react';
 
-interface Slider {
+interface SliderTranslation {
   id: string;
+  locale: string;
   title?: string;
   description?: string;
+}
+
+interface Slider {
+  id: string;
   desktopImageUrl: string;
   mobileImageUrl: string;
   linkUrl?: string;
   sortOrder: number;
   isActive: boolean;
+  translations: SliderTranslation[];
   createdAt: string;
   updatedAt: string;
 }
@@ -27,14 +33,19 @@ export default function SliderPage() {
 
   // Form state
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
+    title_lv: '',
+    description_lv: '',
+    title_en: '',
+    description_en: '',
+    title_ru: '',
+    description_ru: '',
     linkUrl: '',
     sortOrder: 0,
     isActive: true
   });
   const [desktopImage, setDesktopImage] = useState<File | null>(null);
   const [mobileImage, setMobileImage] = useState<File | null>(null);
+  const [activeTab, setActiveTab] = useState('lv');
 
   useEffect(() => {
     fetchSliders();
@@ -57,8 +68,12 @@ export default function SliderPage() {
     e.preventDefault();
     
     const submitData = new FormData();
-    submitData.append('title', formData.title);
-    submitData.append('description', formData.description);
+    submitData.append('title_lv', formData.title_lv);
+    submitData.append('description_lv', formData.description_lv);
+    submitData.append('title_en', formData.title_en);
+    submitData.append('description_en', formData.description_en);
+    submitData.append('title_ru', formData.title_ru);
+    submitData.append('description_ru', formData.description_ru);
     submitData.append('linkUrl', formData.linkUrl);
     submitData.append('sortOrder', formData.sortOrder.toString());
     submitData.append('isActive', formData.isActive.toString());
@@ -94,9 +109,19 @@ export default function SliderPage() {
 
   const handleEdit = (slider: Slider) => {
     setEditingSlider(slider);
+    
+    // Get translations by locale
+    const lvTranslation = slider.translations.find(t => t.locale === 'lv');
+    const enTranslation = slider.translations.find(t => t.locale === 'en');
+    const ruTranslation = slider.translations.find(t => t.locale === 'ru');
+    
     setFormData({
-      title: slider.title || '',
-      description: slider.description || '',
+      title_lv: lvTranslation?.title || '',
+      description_lv: lvTranslation?.description || '',
+      title_en: enTranslation?.title || '',
+      description_en: enTranslation?.description || '',
+      title_ru: ruTranslation?.title || '',
+      description_ru: ruTranslation?.description || '',
       linkUrl: slider.linkUrl || '',
       sortOrder: slider.sortOrder,
       isActive: slider.isActive
@@ -127,8 +152,12 @@ export default function SliderPage() {
 
   const resetForm = () => {
     setFormData({
-      title: '',
-      description: '',
+      title_lv: '',
+      description_lv: '',
+      title_en: '',
+      description_en: '',
+      title_ru: '',
+      description_ru: '',
       linkUrl: '',
       sortOrder: 0,
       isActive: true
@@ -166,38 +195,116 @@ export default function SliderPage() {
           </h2>
           
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Nosaukums</label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
-                  className="w-full px-3 py-2 border rounded-lg"
-                  placeholder="Slaida nosaukums (nav obligāts)"
-                />
-              </div>
+            {/* Language Tabs */}
+            <div className="border-b border-gray-200 mb-4">
+              <nav className="flex space-x-8">
+                {[
+                  { key: 'lv', label: 'Latviešu' },
+                  { key: 'en', label: 'English' },
+                  { key: 'ru', label: 'Русский' }
+                ].map((tab) => (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    onClick={() => setActiveTab(tab.key)}
+                    className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                      activeTab === tab.key
+                        ? 'border-blue-500 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </nav>
+            </div>
+
+            {/* Language Content */}
+            <div className="space-y-4">
+              {activeTab === 'lv' && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Nosaukums (Latviešu)</label>
+                    <input
+                      type="text"
+                      value={formData.title_lv}
+                      onChange={(e) => setFormData({...formData, title_lv: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg"
+                      placeholder="Slaida nosaukums"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Apraksts (Latviešu)</label>
+                    <textarea
+                      value={formData.description_lv}
+                      onChange={(e) => setFormData({...formData, description_lv: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg"
+                      rows={3}
+                      placeholder="Slaida apraksts"
+                    />
+                  </div>
+                </div>
+              )}
               
-              <div>
-                <label className="block text-sm font-medium mb-1">Saites URL</label>
-                <input
-                  type="url"
-                  value={formData.linkUrl}
-                  onChange={(e) => setFormData({...formData, linkUrl: e.target.value})}
-                  className="w-full px-3 py-2 border rounded-lg"
-                  placeholder="https://... (nav obligāts)"
-                />
-              </div>
+              {activeTab === 'en' && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Title (English)</label>
+                    <input
+                      type="text"
+                      value={formData.title_en}
+                      onChange={(e) => setFormData({...formData, title_en: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg"
+                      placeholder="Slide title"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Description (English)</label>
+                    <textarea
+                      value={formData.description_en}
+                      onChange={(e) => setFormData({...formData, description_en: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg"
+                      rows={3}
+                      placeholder="Slide description"
+                    />
+                  </div>
+                </div>
+              )}
+              
+              {activeTab === 'ru' && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Заголовок (Русский)</label>
+                    <input
+                      type="text"
+                      value={formData.title_ru}
+                      onChange={(e) => setFormData({...formData, title_ru: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg"
+                      placeholder="Заголовок слайда"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Описание (Русский)</label>
+                    <textarea
+                      value={formData.description_ru}
+                      onChange={(e) => setFormData({...formData, description_ru: e.target.value})}
+                      className="w-full px-3 py-2 border rounded-lg"
+                      rows={3}
+                      placeholder="Описание слайда"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Apraksts</label>
-              <textarea
-                value={formData.description}
-                onChange={(e) => setFormData({...formData, description: e.target.value})}
+              <label className="block text-sm font-medium mb-1">Saites URL</label>
+              <input
+                type="url"
+                value={formData.linkUrl}
+                onChange={(e) => setFormData({...formData, linkUrl: e.target.value})}
                 className="w-full px-3 py-2 border rounded-lg"
-                rows={3}
-                placeholder="Slaida apraksts (nav obligāts)"
+                placeholder="https://... (nav obligāts)"
               />
             </div>
 
@@ -276,7 +383,7 @@ export default function SliderPage() {
       ) : (
         <div className="bg-white border rounded-lg">
           <div className="p-4 border-b">
-            <h2 className="font-semibold">Esošās slaides ({sliders.length})</h2>
+            <h2 className="font-semibold">Pievienotie slaidi ({sliders.length})</h2>
           </div>
           
           {sliders.length === 0 ? (
@@ -303,16 +410,34 @@ export default function SliderPage() {
                       </div>
                       <div>
                         <h3 className="font-medium">
-                          {slider.title || `Slaids #${slider.sortOrder}`}
+                          {slider.translations.find(t => t.locale === 'lv')?.title || 
+                           slider.translations.find(t => t.locale === 'en')?.title || 
+                           `Slaids #${slider.sortOrder}`}
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Kārtība: {slider.sortOrder} | 
+                          Secība: {slider.sortOrder} | 
                           {slider.isActive ? ' Aktīvs' : ' Neaktīvs'}
                           {slider.linkUrl && ' | Ar saiti'}
                         </p>
-                        {slider.description && (
-                          <p className="text-sm text-gray-600 mt-1">{slider.description}</p>
-                        )}
+                        {/* Show translations info */}
+                        <div className="flex gap-1 mt-1">
+                          {['lv', 'en', 'ru'].map(locale => {
+                            const translation = slider.translations.find(t => t.locale === locale);
+                            const hasContent = translation?.title || translation?.description;
+                            return (
+                              <span
+                                key={locale}
+                                className={`text-xs px-1 py-0.5 rounded ${
+                                  hasContent 
+                                    ? 'bg-green-100 text-green-700' 
+                                    : 'bg-gray-100 text-gray-400'
+                                }`}
+                              >
+                                {locale.toUpperCase()}
+                              </span>
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
                     

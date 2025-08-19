@@ -342,8 +342,6 @@ model ProductAttribute {
 
 model Slider {
   id                String   @id @default(cuid())
-  title             String?  // Optional title for the slide
-  description       String?  // Optional description
   desktopImageUrl   String   // Image for desktop view
   mobileImageUrl    String   // Image for mobile view
   linkUrl           String?  // Optional link when slide is clicked
@@ -354,7 +352,46 @@ model Slider {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   
+  // Relations
+  translations      SliderTranslation[]
+  
   @@index([sortOrder])
   @@index([isActive])
   @@map("sliders")
+}
+
+model SliderTranslation {
+  id          String @id @default(cuid())
+  sliderId    String
+  locale      String // 'lv', 'en', 'ru'
+  title       String?
+  description String?
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  slider      Slider @relation(fields: [sliderId], references: [id], onDelete: Cascade)
+  
+  @@unique([sliderId, locale])
+  @@index([sliderId])
+  @@index([locale])
+  @@map("slider_translations")
+}
+
+model TopBarMessage {
+  id        String   @id @default(cuid())
+  locale    String   // 'lv', 'en', 'ru'
+  message   String   // The message text
+  isActive  Boolean  @default(true)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([locale])
+  @@index([locale])
+  @@index([isActive])
+  @@map("top_bar_messages")
 }
