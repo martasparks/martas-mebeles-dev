@@ -378,6 +378,12 @@ export default function AdminProductsPage() {
                           >
                             Skatīt
                           </Link>
+                          <Link
+                            href={`/admin/products/${product.id}/attributes`}
+                            className="text-purple-600 hover:text-purple-900"
+                          >
+                            Attribūti
+                          </Link>
                         </div>
                       </td>
                     </tr>
