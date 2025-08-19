@@ -112,3 +112,49 @@ export async function PUT(request: NextRequest) {
     );
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { isAdmin } = await checkAdminAuth();
+    
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    }
+
+    const { key, locale, namespace } = await request.json();
+    
+    if (!key || !locale) {
+      return NextResponse.json(
+        { error: 'Missing required fields: key and locale' },
+        { status: 400 }
+      );
+    }
+
+    const deleted = await TranslationSystem.deleteTranslation(
+      key,
+      locale as Locale,
+      namespace
+    );
+
+    // Trigger revalidation to refresh all pages after deleting translations
+    try {
+      await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/revalidate`, {
+        method: 'POST'
+      });
+    } catch (error) {
+      console.warn('Could not trigger revalidation:', error);
+    }
+
+    return NextResponse.json({ 
+      success: true, 
+      deleted,
+      message: 'Translation deleted successfully' 
+    });
+  } catch (error) {
+    console.error('Error deleting translation:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete translation' },
+      { status: 500 }
+    );
+  }
+}

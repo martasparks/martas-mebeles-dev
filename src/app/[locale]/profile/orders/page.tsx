@@ -196,7 +196,7 @@ export default function ProfileOrdersPage() {
                   <div className="flex justify-between items-center">
                     <div>
                       <h3 className="text-lg font-medium text-gray-900">
-                        {t('orderNumber', {number: order.orderNumber})}
+                        {t('order')} #{order.orderNumber}
                       </h3>
                       <p className="text-sm text-gray-600">
                         {t('orderDate')}: {new Date(order.createdAt).toLocaleString('lv-LV')}

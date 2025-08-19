@@ -35,6 +35,21 @@ export default function AdminPage() {
           </Link>
           
           <Link 
+            href="/admin/products" 
+            className="block p-4 border rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-colors"
+          >
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                🛋️
+              </div>
+              <div>
+                <h3 className="font-medium text-gray-900">Produkti</h3>
+                <p className="text-sm text-gray-500">Pārvaldīt produktus un katalāgu</p>
+              </div>
+            </div>
+          </Link>
+          
+          <Link 
             href="/admin/translations" 
             className="block p-4 border rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-colors"
           >

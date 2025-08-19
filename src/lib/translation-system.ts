@@ -79,6 +79,18 @@ private getTranslationsFromDb = async (locale: Locale) => {
       orderBy: [{ namespace: 'asc' }, { key: 'asc' }, { locale: 'asc' }]
     });
   }
+
+  async deleteTranslation(
+    key: string,
+    locale: Locale,
+    namespace?: string
+  ) {
+    const result = await prisma.translation.delete({
+      where: { key_locale: { key, locale } }
+    });
+    
+    return result;
+  }
 }
 
 export const TranslationSystem = new TranslationSystemClass();

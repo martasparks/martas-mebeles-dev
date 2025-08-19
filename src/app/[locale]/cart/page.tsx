@@ -37,9 +37,9 @@ export default function CartPage() {
     setIsClearing(true);
     try {
       cart.clearCart();
-      toast.showSuccess('Grozs iztīrīts!');
+      toast.showSuccess(t('cartCleared'));
     } catch (error) {
-      toast.showError('Neizdevās iztīrīt grozu');
+      toast.showError(t('errorClearingCart'));
     } finally {
       setIsClearing(false);
     }
@@ -201,7 +201,7 @@ export default function CartPage() {
                       {isClearing ? (
                         <>
                           <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin mr-2"></div>
-                          Tīra...
+                          {t('clearing')}
                         </>
                       ) : (
                         <>
@@ -220,7 +220,7 @@ export default function CartPage() {
             {/* Order Summary */}
             <div className="lg:col-span-4 mt-8 lg:mt-0">
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-lg font-medium text-gray-900 mb-4">Pasūtījuma kopsavilkums</h2>
+                <h2 className="text-lg font-medium text-gray-900 mb-4">{t('summary')}</h2>
                 
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -246,12 +246,12 @@ export default function CartPage() {
                     href="/checkout"
                     className="w-full block text-center bg-blue-600 text-white py-3 px-4 rounded-md font-medium hover:bg-blue-700 transition-colors"
                   >
-                    Noformēt pasūtījumu
+                    {t('proceedToCheckout')}
                   </Link>
                   
                   <div className="text-center">
                     <span className="text-xs text-gray-500">
-                      🚚 Bezmaksas piegāde visā Latvijā
+                      🚚 {t('freeShippingNote')}
                     </span>
                   </div>
                 </div>

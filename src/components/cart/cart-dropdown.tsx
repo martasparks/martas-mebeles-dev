@@ -25,7 +25,7 @@ export function CartDropdown() {
     cart.updateQuantity(productId, newQuantity);
     
     if (item && newQuantity > item.quantity) {
-      toast.showSuccess(`Daudzums palielināts`);
+      toast.showSuccess(t('quantityIncreased'));
     }
   };
 
@@ -38,7 +38,7 @@ export function CartDropdown() {
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m-2.4 8a2 2 0 00-2 2m0 0a2 2 0 002 2h12.32a2 2 0 002-2m-2 0V9H7v4z" />
         </svg>
-        <span>Grozs</span>
+        <span>{t('cartButton')}</span>
         {cart.totalItems > 0 && (
           <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
             {cart.totalItems}
@@ -56,19 +56,19 @@ export function CartDropdown() {
             {cart.isLoading ? (
               <div className="p-4 text-center">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
-                <p className="mt-2 text-sm text-gray-500">Ielādē...</p>
+                <p className="mt-2 text-sm text-gray-500">{t('loading')}</p>
               </div>
             ) : cart.items.length === 0 ? (
               <div className="p-4 text-center">
                 <svg className="w-12 h-12 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m-2.4 8a2 2 0 00-2 2m0 0a2 2 0 002 2h12.32a2 2 0 002-2m-2 0V9H7v4z" />
                 </svg>
-                <p className="text-gray-500">Jūsu grozs ir tukšs</p>
+                <p className="text-gray-500">{t('emptyTitle')}</p>
               </div>
             ) : (
               <>
                 <div className="p-2">
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Iepirkumu grozs</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">{t('title')}</h3>
                   <div className="space-y-2">
                     {cart.items.map((item) => (
                       <div key={item.id} className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded">
@@ -113,7 +113,7 @@ export function CartDropdown() {
                 
                 <div className="border-t p-4">
                   <div className="flex justify-between items-center mb-3">
-                    <span className="text-lg font-medium text-gray-900">Kopā:</span>
+                    <span className="text-lg font-medium text-gray-900">{t('total')}:</span>
                     <span className="text-lg font-bold text-blue-600">{cart.formattedTotalPrice()}</span>
                   </div>
                   
@@ -123,14 +123,14 @@ export function CartDropdown() {
                       className="w-full block text-center bg-gray-100 text-gray-900 py-2 px-4 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
-                      Apskatīt grozu
+                      {t('viewCart')}
                     </Link>
                     <Link
                       href="/checkout"
                       className="w-full block text-center bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
-                      Noformēt pasūtījumu
+                      {t('proceedToCheckout')}
                     </Link>
                   </div>
                 </div>

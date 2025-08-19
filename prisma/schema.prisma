@@ -170,3 +170,172 @@ model OrderItem {
   @@index([orderId])
   @@map("order_items")
 }
+
+// Product Management System
+
+model Brand {
+  id          String    @id @default(cuid())
+  name        String    @unique // e.g., "Google", "IKEA"
+  code        String    @unique @db.VarChar(3) // e.g., "GOO", "IKE" - 3 letter code
+  description String?
+  logoUrl     String?
+  isActive    Boolean   @default(true)
+  
+  // Auto-increment counter for product codes
+  productCounter Int     @default(0) // Used to generate GOO-001, GOO-002, etc.
+  
+  // Timestamps
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  products    Product[]
+  
+  @@map("brands")
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique // e.g., "Bedroom", "Kitchen"
+  slug        String    @unique // URL-friendly version
+  description String?
+  imageUrl    String?
+  parentId    String?   // For subcategories
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  
+  // Timestamps
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  parent      Category? @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Category[] @relation("CategoryHierarchy")
+  products    Product[]
+  
+  @@index([parentId])
+  @@index([slug])
+  @@map("categories")
+}
+
+model StockStatus {
+  id          String    @id @default(cuid())
+  name        String    @unique // e.g., "In Stock", "Out of Stock", "Pre-order"
+  code        String    @unique // e.g., "in_stock", "out_of_stock", "pre_order"
+  color       String?   // Hex color for display
+  isActive    Boolean   @default(true)
+  
+  // Relations
+  products    Product[]
+  
+  @@map("stock_statuses")
+}
+
+model Product {
+  id              String      @id @default(cuid())
+  code            String      @unique // Auto-generated: GOO-001, GOO-002, etc.
+  name            String
+  shortDescription String?
+  fullDescription String?
+  
+  // Pricing
+  price           Decimal     @db.Decimal(10, 2)
+  salePrice       Decimal?    @db.Decimal(10, 2) // Optional sale price
+  
+  // Stock management
+  stock           Int         @default(0)
+  stockStatusId   String
+  
+  // Physical properties
+  width           Decimal?    @db.Decimal(8, 2) // cm
+  height          Decimal?    @db.Decimal(8, 2) // cm
+  depth           Decimal?    @db.Decimal(8, 2) // cm
+  weight          Decimal?    @db.Decimal(8, 2) // kg
+  
+  // Store visibility
+  isVisible       Boolean     @default(true) // Show/Hide in store
+  isActive        Boolean     @default(true)
+  
+  // SEO and URLs
+  slug            String      @unique // URL-friendly version
+  metaTitle       String?
+  metaDescription String?
+  
+  // Images
+  mainImageUrl    String?
+  imageUrls       String[]    // Array of image URLs
+  
+  // Relations
+  brandId         String
+  categoryId      String
+  
+  brand           Brand       @relation(fields: [brandId], references: [id], onDelete: Restrict)
+  category        Category    @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  stockStatus     StockStatus @relation(fields: [stockStatusId], references: [id], onDelete: Restrict)
+  
+  // Product attributes (colors, materials, etc.)
+  attributes      ProductAttribute[]
+  
+  // Timestamps
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  @@index([brandId])
+  @@index([categoryId])
+  @@index([stockStatusId])
+  @@index([code])
+  @@index([slug])
+  @@index([isVisible, isActive])
+  @@map("products")
+}
+
+model AttributeType {
+  id          String    @id @default(cuid())
+  name        String    @unique // e.g., "Color", "Material", "Handle Type"
+  code        String    @unique // e.g., "color", "material", "handle_type"
+  inputType   String    @default("select") // "select", "text", "color", "number"
+  isRequired  Boolean   @default(false)
+  sortOrder   Int       @default(0)
+  
+  // Relations
+  values      AttributeValue[]
+  productAttributes ProductAttribute[]
+  
+  @@map("attribute_types")
+}
+
+model AttributeValue {
+  id              String    @id @default(cuid())
+  attributeTypeId String
+  name            String    // e.g., "Red", "Oak Wood", "Chrome Handle"
+  value           String    // Actual value or code
+  colorCode       String?   // For color attributes (hex code)
+  imageUrl        String?   // Optional image for the value
+  sortOrder       Int       @default(0)
+  
+  // Relations
+  attributeType   AttributeType @relation(fields: [attributeTypeId], references: [id], onDelete: Cascade)
+  productAttributes ProductAttribute[]
+  
+  @@unique([attributeTypeId, value])
+  @@index([attributeTypeId])
+  @@map("attribute_values")
+}
+
+model ProductAttribute {
+  id               String         @id @default(cuid())
+  productId        String
+  attributeTypeId  String
+  attributeValueId String
+  customValue      String?        // For text input attributes
+  
+  // Relations
+  product          Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  attributeType    AttributeType  @relation(fields: [attributeTypeId], references: [id], onDelete: Cascade)
+  attributeValue   AttributeValue @relation(fields: [attributeValueId], references: [id], onDelete: Cascade)
+  
+  @@unique([productId, attributeTypeId]) // One value per attribute type per product
+  @@index([productId])
+  @@index([attributeTypeId])
+  @@map("product_attributes")
+}

@@ -667,6 +667,46 @@ const translations = {
     en: 'items',
     ru: 'товаров'
   },
+  'Cart.cartCleared': {
+    lv: 'Grozs iztīrīts!',
+    en: 'Cart cleared!',
+    ru: 'Корзина очищена!'
+  },
+  'Cart.errorClearingCart': {
+    lv: 'Neizdevās iztīrīt grozu',
+    en: 'Failed to clear cart',
+    ru: 'Не удалось очистить корзину'
+  },
+  'Cart.clearing': {
+    lv: 'Tīra...',
+    en: 'Clearing...',
+    ru: 'Очищаем...'
+  },
+  'Cart.summary': {
+    lv: 'Pasūtījuma kopsavilkums',
+    en: 'Order Summary',
+    ru: 'Сводка заказа'
+  },
+  'Cart.freeShippingNote': {
+    lv: 'Bezmaksas piegāde visā Latvijā',
+    en: 'Free shipping throughout Latvia',
+    ru: 'Бесплатная доставка по всей Латвии'
+  },
+  'Cart.cartButton': {
+    lv: 'Grozs',
+    en: 'Cart',
+    ru: 'Корзина'
+  },
+  'Cart.quantityIncreased': {
+    lv: 'Daudzums palielināts',
+    en: 'Quantity increased',
+    ru: 'Количество увеличено'
+  },
+  'Cart.viewCart': {
+    lv: 'Apskatīt grozu',
+    en: 'View Cart',
+    ru: 'Посмотреть корзину'
+  },
 
   // Checkout Page translations
   'Checkout.title': {
