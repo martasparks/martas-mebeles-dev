@@ -11,9 +11,6 @@ export function Header() {
   const t = useTranslations('Header');
   const { user, customer, signOut, loading } = useAuth();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  
-  // Debug: check what translations we're getting
-  console.log('Header - Products translation:', t('products'));
 
   const handleSignOut = async () => {
     await signOut();
@@ -82,7 +79,7 @@ export function Header() {
                             {t('profile')}
                           </Link>
                           <Link
-                            href="/orders"
+                            href="/profile/orders"
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                             onClick={() => setIsUserMenuOpen(false)}
                           >

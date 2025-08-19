@@ -3,14 +3,23 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link } from '@/i18n/navigation';
 
 export default function ProfilePage() {
-  const { user, customer, loading, refreshCustomer } = useAuth();
+  const { user, customer, loading, refreshCustomer, updateLastLogin } = useAuth();
   const [creating, setCreating] = useState(false);
   const t = useTranslations('Profile');
   const router = useRouter();
+  const hasUpdatedLogin = useRef(false);
+  
+  // Update last login when user visits profile page (only once)
+  useEffect(() => {
+    if (user && !hasUpdatedLogin.current) {
+      hasUpdatedLogin.current = true;
+      updateLastLogin();
+    }
+  }, [user]); // Remove updateLastLogin from dependencies
 
   const handleCreateProfile = async () => {
     setCreating(true);

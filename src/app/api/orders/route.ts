@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
 
 interface OrderData {
@@ -39,8 +38,7 @@ export async function POST(request: NextRequest) {
   try {
     const orderData: OrderData = await request.json();
     
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     
     // Calculate totals
@@ -140,38 +138,65 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET /api/orders - Get orders for authenticated user
-export async function GET() {
+// GET /api/orders - Get orders
+export async function GET(request: NextRequest) {
   try {
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const { searchParams } = new URL(request.url);
+
+    // 1) Allow lookup by orderNumber (+ optional email) — useful for order confirmation pages
+    const orderNumber = searchParams.get('orderNumber');
+    const email = searchParams.get('email');
+    if (orderNumber) {
+      const order = await prisma.order.findUnique({
+        where: { orderNumber },
+        include: { items: true, customer: true },
+      });
+
+      if (!order) {
+        return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+      }
+
+      // If email provided, make sure it matches (simple protection)
+      if (email && email.toLowerCase() !== order.customerEmail.toLowerCase()) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+
+      return NextResponse.json({ order });
+    }
+
+    // 2) Otherwise, return orders for the authenticated user (with pagination)
+    const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    
+
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    
-    // Get customer
+
     const customer = await prisma.customer.findUnique({
-      where: { supabaseUserId: user.id }
+      where: { supabaseUserId: user.id },
     });
-    
+
     if (!customer) {
-      return NextResponse.json({ orders: [] });
+      return NextResponse.json({ orders: [], page: 1, pageSize: 10, total: 0 });
     }
-    
-    // Get orders
-    const orders = await prisma.order.findMany({
-      where: { customerId: customer.id },
-      include: {
-        items: true
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    });
-    
-    return NextResponse.json({ orders });
+
+    // Pagination
+    const page = Math.max(parseInt(searchParams.get('page') || '1', 10), 1);
+    const pageSize = Math.min(Math.max(parseInt(searchParams.get('limit') || '10', 10), 1), 50);
+    const skip = (page - 1) * pageSize;
+
+    const [orders, total] = await Promise.all([
+      prisma.order.findMany({
+        where: { customerId: customer.id },
+        include: { items: true },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: pageSize,
+      }),
+      prisma.order.count({ where: { customerId: customer.id } }),
+    ]);
+
+    return NextResponse.json({ orders, page, pageSize, total });
   } catch (error) {
     console.error('Error fetching orders:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

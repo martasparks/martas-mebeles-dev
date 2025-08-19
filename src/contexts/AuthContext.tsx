@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
 
@@ -32,6 +32,7 @@ type AuthContextType = {
   isAdmin: boolean;
   signOut: () => Promise<void>;
   refreshCustomer: () => Promise<void>;
+  updateLastLogin: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -41,19 +42,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
+  const hasInitialized = useRef(false);
+  const profileFetched = useRef<string | null>(null);
 
   const isAdmin = user?.user_metadata?.is_super_admin === true;
 
-  const fetchCustomerProfile = async (userId: string, updateLogin = true) => {
+  const fetchCustomerProfile = async (userId: string) => {
+    // Avoid fetching the same profile multiple times
+    if (profileFetched.current === userId) return;
+    profileFetched.current = userId;
+    
     try {
       const response = await fetch('/api/customer/profile');
       if (response.ok) {
         const data = await response.json();
         setCustomer(data.customer);
-        // Update last login after successful profile fetch (but avoid infinite loop)
-        if (updateLogin) {
-          await updateLastLogin();
-        }
+        // Don't automatically update last login on profile fetch
+        // Last login should only be updated on actual user actions
       } else if (response.status === 404) {
         // Customer profile doesn't exist, create it
         await createCustomerProfile();
@@ -86,11 +91,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       
       if (response.ok) {
-        // Refresh customer data to get updated lastLoginAt (without triggering another login update)
-        const profileResponse = await fetch('/api/customer/profile');
-        if (profileResponse.ok) {
-          const data = await profileResponse.json();
-          setCustomer(data.customer);
+        // Don't fetch profile again to avoid infinite loop
+        // Just update the lastLoginAt in current customer state
+        if (customer) {
+          setCustomer({
+            ...customer,
+            lastLoginAt: new Date().toISOString()
+          });
         }
       }
     } catch (error) {
@@ -105,6 +112,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    if (hasInitialized.current) return;
+    hasInitialized.current = true;
+    
     // Get initial session
     const getInitialSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -133,9 +143,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           } else {
             // User exists but email not verified - don't fetch customer profile
             setCustomer(null);
+            profileFetched.current = null;
           }
         } else {
           setCustomer(null);
+          profileFetched.current = null;
         }
         
         setLoading(false);
@@ -157,6 +169,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isAdmin,
     signOut,
     refreshCustomer,
+    updateLastLogin,
   };
 
   return (

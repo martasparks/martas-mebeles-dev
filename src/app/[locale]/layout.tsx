@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ToastProvider } from '@/contexts/ToastContext';
+import { CartProvider } from '@/contexts/CartContext';
 import { TopBar } from '@/components/ui/top-bar';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
@@ -27,14 +28,16 @@ export default async function LocaleLayout({
     <NextIntlClientProvider locale={locale} messages={messages}>
       <ToastProvider>
         <AuthProvider>
-          <div className="flex flex-col min-h-screen">
-            <TopBar />
-            <Header />
-            <main className="flex-grow">
-              {children}
-            </main>
-            <Footer />
-          </div>
+          <CartProvider>
+            <div className="flex flex-col min-h-screen">
+              <TopBar />
+              <Header />
+              <main className="flex-grow">
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </CartProvider>
         </AuthProvider>
       </ToastProvider>
     </NextIntlClientProvider>

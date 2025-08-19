@@ -2,15 +2,26 @@
 
 import { useCart } from '@/hooks/use-cart';
 import { useToast } from '@/contexts/ToastContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function CartPage() {
   const cart = useCart();
   const toast = useToast();
+  const { user, updateLastLogin } = useAuth();
   const t = useTranslations('Cart');
   const [isClearing, setIsClearing] = useState(false);
+  const hasUpdatedLogin = useRef(false);
+  
+  // Update last login when user visits cart page (only once)
+  useEffect(() => {
+    if (user && !hasUpdatedLogin.current) {
+      hasUpdatedLogin.current = true;
+      updateLastLogin();
+    }
+  }, [user]); // Remove updateLastLogin from dependencies
 
   const handleQuantityChange = (productId: string, newQuantity: number) => {
     if (newQuantity <= 0) {

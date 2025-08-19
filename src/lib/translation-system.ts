@@ -1,5 +1,3 @@
-import { cache } from 'react';
-import { revalidateTag } from 'next/cache';
 import prisma from './prisma';
 
 export type TranslationKey = string;
@@ -7,20 +5,17 @@ export type Locale = 'lv' | 'en' | 'ru';
 export type TranslationMessages = Record<string, unknown>;
 
 class TranslationSystemClass{
-  private getTranslationsFromDb = async (locale: Locale) => {
+private getTranslationsFromDb = async (locale: Locale) => {
     try {
-      console.log(`🔍 Fetching translations from DB for locale: ${locale}`);
+      // Add a small delay to ensure we get fresh data
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
       const translations = await prisma.translation.findMany({
         where: { locale },
         select: { key: true, value: true }
       });
       
-      console.log(`📊 Found ${translations.length} translations for ${locale}`);
-      if (translations.length > 0) {
-        console.log(`🔤 Sample translations for ${locale}:`, translations.slice(0, 3).map(t => `${t.key}: ${t.value}`));
-      }
-      
-      return translations.reduce((acc: TranslationMessages, { key, value }) => {
+      const result = translations.reduce((acc: TranslationMessages, { key, value }) => {
         const keys = key.split('.');
         let current = acc;
         
@@ -32,6 +27,8 @@ class TranslationSystemClass{
         current[keys[keys.length - 1]] = value;
         return acc;
       }, {} as TranslationMessages);
+      
+      return result;
     } catch (error) {
       console.error(`Failed to load translations for ${locale}:`, error);
       return {};
@@ -54,12 +51,6 @@ class TranslationSystemClass{
       create: { key, locale, value, namespace }
     });
     
-    // Invalidate cache so next-intl picks up new translations
-    try {
-      revalidateTag(`translations-${locale}`);
-    } catch (error) {
-      console.warn('Could not revalidate cache:', error);
-    }
     
     return result;
   }

@@ -1,21 +1,31 @@
 import createIntlMiddleware from 'next-intl/middleware';
 import { updateSession } from '@/utils/supabase/middleware';
-import { type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { routing } from '@/i18n/routing';
 
-// Create the next-intl middleware
-const intlMiddleware = createIntlMiddleware(routing);
-
 export async function middleware(request: NextRequest) {
-  // Apply internationalization middleware first
-  const response = intlMiddleware(request);
+  const { pathname } = request.nextUrl;
   
-  // If intlMiddleware returns a response (redirect), use it
+  // Skip i18n middleware for admin routes
+  if (pathname.startsWith('/admin')) {
+    return await updateSession(request);
+  }
+  
+  // Handle internationalization for other routes
+  const handleI18nRouting = createIntlMiddleware(routing);
+  const response = handleI18nRouting(request);
+  
   if (response) {
+    // Handle Supabase auth on the i18n response
+    const authResponse = await updateSession(request);
+    // Copy auth cookies to i18n response
+    for (const cookie of authResponse.cookies.getAll()) {
+      response.cookies.set(cookie.name, cookie.value, cookie);
+    }
     return response;
   }
   
-  // Handle Supabase auth session
+  // No i18n redirect needed, just handle auth
   return await updateSession(request);
 }
 

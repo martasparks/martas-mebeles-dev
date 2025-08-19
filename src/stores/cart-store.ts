@@ -154,42 +154,43 @@ export const useCartStore = create<CartState>()(
       
       setHydrated: (hydrated) => set({ isHydrated: hydrated }),
 
-      // Sync to server
-      syncToServer: async () => {
-        const { items, guestId, isHydrated } = get();
-        
-        // Don't sync if not hydrated yet or no items
-        if (!isHydrated || typeof window === 'undefined') return;
-        
-        try {
-          set({ isLoading: true });
-          
-          const response = await fetch('/api/cart/sync', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              guestId,
-              items: items.map(item => ({
-                productId: item.productId,
-                name: item.name,
-                price: item.price,
-                quantity: item.quantity,
-                imageUrl: item.imageUrl,
-              }))
-            }),
-          });
-          
-          if (!response.ok) {
-            console.error('Failed to sync cart to server');
-          }
-        } catch (error) {
-          console.error('Error syncing cart to server:', error);
-        } finally {
-          set({ isLoading: false });
-        }
+// Sync to server
+syncToServer: async () => {
+  const { items, guestId, isHydrated } = get();
+  
+  // Don't sync if not hydrated yet or no items
+  if (!isHydrated || typeof window === 'undefined') return;
+  
+  try {
+    set({ isLoading: true });
+    
+    const response = await fetch('/api/cart/sync', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        guestId: guestId || null,
+        items: items.map(item => ({
+          productId: item.productId,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          imageUrl: item.imageUrl,
+        }))
+      }),
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Failed to sync cart to server:', errorText);
+    }
+  } catch (error) {
+    console.error('Error syncing cart to server:', error);
+  } finally {
+    set({ isLoading: false });
+  }
+},
 
       // Load from server
       loadFromServer: async () => {
@@ -239,9 +240,13 @@ export const useCartStore = create<CartState>()(
           state.totalItems = totals.totalItems;
           state.totalPrice = totals.totalPrice;
           
-          // Load from server after hydration
+          // Only load from server if user is not logged in
+          // If user is logged in, useCart hook will handle merging
           setTimeout(() => {
-            state.loadFromServer();
+            const isLoggedIn = document.cookie.includes('sb-');
+            if (!isLoggedIn) {
+              state.loadFromServer();
+            }
           }, 100);
         }
       },

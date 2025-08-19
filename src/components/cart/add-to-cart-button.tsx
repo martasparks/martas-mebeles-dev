@@ -2,6 +2,7 @@
 
 import { useCart } from '@/hooks/use-cart';
 import { useToast } from '@/contexts/ToastContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
 
 interface AddToCartButtonProps {
@@ -24,6 +25,7 @@ export function AddToCartButton({
 }: AddToCartButtonProps) {
   const cart = useCart();
   const toast = useToast();
+  const { user, updateLastLogin } = useAuth();
   const [isAdding, setIsAdding] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
   
@@ -38,6 +40,11 @@ export function AddToCartButton({
         quantity,
         imageUrl: product.imageUrl,
       });
+      
+      // Update last login on cart action (if user is logged in)
+      if (user) {
+        updateLastLogin();
+      }
       
       // Show success state
       setJustAdded(true);

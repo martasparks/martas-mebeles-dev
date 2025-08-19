@@ -18,12 +18,35 @@ export default function AdminPage() {
       <h1 className="text-2xl font-bold mb-6">Admin Panel</h1>
       <div className="bg-white rounded border p-4">
         <h2 className="text-lg font-semibold mb-4">Pieejamās sadaļas</h2>
-        <div className="space-y-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Link 
+            href="/admin/orders" 
+            className="block p-4 border rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-colors"
+          >
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                📦
+              </div>
+              <div>
+                <h3 className="font-medium text-gray-900">Pasūtījumi</h3>
+                <p className="text-sm text-gray-500">Pārvaldīt pasūtījumus un statusus</p>
+              </div>
+            </div>
+          </Link>
+          
           <Link 
             href="/admin/translations" 
-            className="block p-3 border rounded hover:bg-gray-50"
+            className="block p-4 border rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-colors"
           >
-            Tulkojumi
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                🌍
+              </div>
+              <div>
+                <h3 className="font-medium text-gray-900">Tulkojumi</h3>
+                <p className="text-sm text-gray-500">Pārvaldīt vietnes tulkojumus</p>
+              </div>
+            </div>
           </Link>
         </div>
       </div>

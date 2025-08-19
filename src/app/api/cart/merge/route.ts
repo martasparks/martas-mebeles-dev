@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -8,11 +7,30 @@ const prisma = new PrismaClient();
 // POST /api/cart/merge - Merge guest cart with user cart on login
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { guestId }: { guestId: string } = body;
+    // Safely parse JSON with error handling
+    let body;
+    try {
+      const text = await request.text();
+      console.log('Raw request body:', text);
+      
+      if (!text || text.trim() === '') {
+        console.log('Empty request body, using default values');
+        body = { guestId: null };
+      } else {
+        body = JSON.parse(text);
+      }
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      return NextResponse.json({ 
+        error: 'Invalid JSON in request body' 
+      }, { status: 400 });
+    }
+
+    const { guestId }: { guestId: string | null } = body;
     
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    console.log('Merge cart request - guestId:', guestId);
+    
+    const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) {
@@ -35,6 +53,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Customer not found' }, { status: 404 });
     }
     
+    // If no guestId provided, just return existing user cart
+    if (!guestId) {
+      console.log('No guestId provided, returning existing user cart');
+      return NextResponse.json({ 
+        success: true, 
+        cart: customer.cart || null 
+      });
+    }
+    
     // Find guest cart
     const guestCart = await prisma.cart.findFirst({
       where: { guestId },
@@ -45,9 +72,10 @@ export async function POST(request: NextRequest) {
     
     if (!guestCart || guestCart.items.length === 0) {
       // No guest cart to merge, just return existing user cart
+      console.log('No guest cart found or empty, returning user cart');
       return NextResponse.json({ 
         success: true, 
-        cart: customer.cart 
+        cart: customer.cart || null 
       });
     }
     
@@ -55,6 +83,7 @@ export async function POST(request: NextRequest) {
     
     if (!userCart) {
       // Convert guest cart to user cart
+      console.log('Converting guest cart to user cart');
       userCart = await prisma.cart.update({
         where: { id: guestCart.id },
         data: {
@@ -67,6 +96,7 @@ export async function POST(request: NextRequest) {
       });
     } else {
       // Merge guest cart items into user cart
+      console.log('Merging guest cart items into user cart');
       for (const guestItem of guestCart.items) {
         // Check if item already exists in user cart
         const existingItem = await prisma.cartItem.findUnique({
@@ -115,12 +145,16 @@ export async function POST(request: NextRequest) {
       });
     }
     
+    console.log('Cart merge completed successfully');
     return NextResponse.json({ 
       success: true, 
       cart: userCart 
     });
   } catch (error) {
     console.error('Error merging cart:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'Internal server error',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
   }
 }

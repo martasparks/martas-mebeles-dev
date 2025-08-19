@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
-import { useRouter } from 'next/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 
 interface OrderItem {
   id: string;
@@ -42,7 +41,7 @@ interface Order {
 }
 
 export default function ProfileOrdersPage() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const t = useTranslations('Profile');
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
@@ -50,8 +49,12 @@ export default function ProfileOrdersPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Wait until auth is initialized; otherwise we might redirect while already logged in
+    if (authLoading) return;
+
     if (!user) {
-      router.push('/auth/login');
+      // Use locale-aware router from next-intl navigation helpers
+      router.replace('/auth/login');
       return;
     }
 
@@ -62,58 +65,71 @@ export default function ProfileOrdersPage() {
           const data = await response.json();
           setOrders(data.orders);
         } else {
-          setError('Neizdevās ielādēt pasūtījumus');
+          setError(t('failedToLoadOrders'));
         }
       } catch (err) {
-        setError('Notika kļūda ielādējot pasūtījumus');
+        setError(t('errorLoadingOrders'));
       } finally {
         setLoading(false);
       }
     };
 
     fetchOrders();
-  }, [user, router]);
+  }, [user, authLoading, router]);
 
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'confirmed': return 'bg-blue-100 text-blue-800';
-      case 'processing': return 'bg-purple-100 text-purple-800';
-      case 'shipped': return 'bg-indigo-100 text-indigo-800';
-      case 'delivered': return 'bg-green-100 text-green-800';
-      case 'cancelled': return 'bg-red-100 text-red-800';
+    const normalizedStatus = status.toUpperCase();
+    switch (normalizedStatus) {
+      case 'PENDING': return 'bg-yellow-100 text-yellow-800';
+      case 'CONFIRMED': 
+      case 'PROCESSING': return 'bg-blue-100 text-blue-800';
+      case 'SHIPPED': return 'bg-purple-100 text-purple-800';
+      case 'DELIVERED': return 'bg-green-100 text-green-800';
+      case 'CANCELLED': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getStatusText = (status: string) => {
-    switch (status) {
-      case 'pending': return 'Gaida apstiprinājumu';
-      case 'confirmed': return 'Apstiprināts';
-      case 'processing': return 'Apstrādā';
-      case 'shipped': return 'Nosūtīts';
-      case 'delivered': return 'Piegādāts';
-      case 'cancelled': return 'Atcelts';
+    const normalizedStatus = status.toUpperCase();
+    switch (normalizedStatus) {
+      case 'PENDING': return t('orderStatus.pending');
+      case 'CONFIRMED': return t('orderStatus.confirmed');
+      case 'PROCESSING': return t('orderStatus.processing');
+      case 'SHIPPED': return t('orderStatus.shipped');
+      case 'DELIVERED': return t('orderStatus.delivered');
+      case 'CANCELLED': return t('orderStatus.cancelled');
       default: return status;
     }
   };
 
   const getPaymentMethodText = (method: string) => {
     switch (method) {
-      case 'bank_transfer': return 'Bankas pārskaitījums';
-      case 'card': return 'Maksājums ar karti';
-      case 'cash_on_delivery': return 'Skaidra nauda piegādes brīdī';
+      case 'bank_transfer': return t('paymentMethod.bankTransfer');
+      case 'card': return t('paymentMethod.card');
+      case 'cash_on_delivery': return t('paymentMethod.cashOnDelivery');
       default: return method;
     }
   };
 
-  if (loading) {
+  const getPaymentStatusText = (status: string) => {
+    switch (status) {
+      case 'paid': return t('paymentStatus.paid');
+      case 'unpaid': return t('paymentStatus.unpaid');
+      case 'pending': return t('paymentStatus.pending');
+      case 'failed': return t('paymentStatus.failed');
+      case 'refunded': return t('paymentStatus.refunded');
+      default: return status;
+    }
+  };
+
+  if (loading || authLoading) {
     return (
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Ielādē pasūtījumus...</p>
+            <p className="text-gray-600">{t('loadingOrders')}</p>
           </div>
         </div>
       </div>
@@ -130,13 +146,13 @@ export default function ProfileOrdersPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Kļūda</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">{t('error')}</h1>
             <p className="text-gray-600 mb-6">{error}</p>
             <Link
               href="/profile"
               className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors"
             >
-              Atgriezties uz profilu
+              {t('backToProfile')}
             </Link>
           </div>
         </div>
@@ -149,11 +165,11 @@ export default function ProfileOrdersPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <nav className="text-sm text-gray-600 mb-4">
-            <Link href="/profile" className="hover:text-blue-600">Profils</Link>
+            <Link href="/profile" className="hover:text-blue-600">{t('profile')}</Link>
             <span className="mx-2">→</span>
-            <span className="text-gray-900">Mani pasūtījumi</span>
+            <span className="text-gray-900">{t('myOrders')}</span>
           </nav>
-          <h1 className="text-3xl font-bold text-gray-900">Mani pasūtījumi</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{t('myOrders')}</h1>
         </div>
 
         {orders.length === 0 ? (
@@ -162,14 +178,14 @@ export default function ProfileOrdersPage() {
               <svg className="w-24 h-24 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              <h2 className="text-2xl font-medium text-gray-900 mb-2">Nav pasūtījumu</h2>
-              <p className="text-gray-600 mb-6">Jūs vēl neesat veicis nevienu pasūtījumu</p>
+              <h2 className="text-2xl font-medium text-gray-900 mb-2">{t('noOrders')}</h2>
+              <p className="text-gray-600 mb-6">{t('noOrdersDescription')}</p>
             </div>
             <Link
               href="/"
               className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors"
             >
-              Sākt iepirkšanos
+              {t('startShopping')}
             </Link>
           </div>
         ) : (
@@ -180,10 +196,10 @@ export default function ProfileOrdersPage() {
                   <div className="flex justify-between items-center">
                     <div>
                       <h3 className="text-lg font-medium text-gray-900">
-                        Pasūtījums #{order.orderNumber}
+                        {t('orderNumber', {number: order.orderNumber})}
                       </h3>
                       <p className="text-sm text-gray-600">
-                        Noformēts: {new Date(order.createdAt).toLocaleString('lv-LV')}
+                        {t('orderDate')}: {new Date(order.createdAt).toLocaleString('lv-LV')}
                       </p>
                     </div>
                     <div className="text-right">
@@ -191,7 +207,7 @@ export default function ProfileOrdersPage() {
                         {getStatusText(order.orderStatus)}
                       </span>
                       <p className="text-sm text-gray-600 mt-1">
-                        Kopā: €{Number(order.totalAmount).toFixed(2)}
+                        {t('total')}: €{Number(order.totalAmount).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -200,26 +216,29 @@ export default function ProfileOrdersPage() {
                 <div className="px-6 py-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
                     <div>
-                      <h4 className="text-sm font-medium text-gray-900 mb-1">Maksājuma veids</h4>
+                      <h4 className="text-sm font-medium text-gray-900 mb-1">{t('paymentMethod.title')}</h4>
                       <p className="text-sm text-gray-600">{getPaymentMethodText(order.paymentMethod)}</p>
                     </div>
                     <div>
-                      <h4 className="text-sm font-medium text-gray-900 mb-1">Maksājuma statuss</h4>
+                      <h4 className="text-sm font-medium text-gray-900 mb-1">{t('paymentStatus.title')}</h4>
                       <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        order.paymentStatus === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                        order.paymentStatus === 'paid' ? 'bg-green-100 text-green-800' : 
+                        order.paymentStatus === 'failed' ? 'bg-red-100 text-red-800' :
+                        order.paymentStatus === 'refunded' ? 'bg-purple-100 text-purple-800' :
+                        'bg-yellow-100 text-yellow-800'
                       }`}>
-                        {order.paymentStatus === 'paid' ? 'Apmaksāts' : 'Gaida apmaksu'}
+                        {getPaymentStatusText(order.paymentStatus)}
                       </span>
                     </div>
                     <div>
-                      <h4 className="text-sm font-medium text-gray-900 mb-1">Preču skaits</h4>
-                      <p className="text-sm text-gray-600">{order.items.length} prece(-s)</p>
+                      <h4 className="text-sm font-medium text-gray-900 mb-1">{t('itemCount')}</h4>
+                      <p className="text-sm text-gray-600">{order.items.length} {t('items')}</p>
                     </div>
                   </div>
 
                   {/* Order Items Preview */}
                   <div className="border-t border-gray-200 pt-4">
-                    <h4 className="text-sm font-medium text-gray-900 mb-3">Pasūtītās preces</h4>
+                    <h4 className="text-sm font-medium text-gray-900 mb-3">{t('orderedItems')}</h4>
                     <div className="space-y-2">
                       {order.items.slice(0, 3).map((item) => (
                         <div key={item.id} className="flex items-center space-x-3">
@@ -249,7 +268,7 @@ export default function ProfileOrdersPage() {
                       ))}
                       {order.items.length > 3 && (
                         <p className="text-sm text-gray-500 text-center pt-2">
-                          +{order.items.length - 3} citas preces
+                          {t('moreItems', {count: order.items.length - 3})}
                         </p>
                       )}
                     </div>
@@ -262,7 +281,7 @@ export default function ProfileOrdersPage() {
                       href={`/orders/${order.orderNumber}`}
                       className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
                     >
-                      Skatīt detaļas
+                      {t('viewDetails')}
                     </Link>
                   </div>
                 </div>

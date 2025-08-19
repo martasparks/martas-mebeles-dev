@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -19,8 +18,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { guestId, items }: { guestId: string; items: CartItemData[] } = body;
     
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     
     let customerId: string | null = null;
