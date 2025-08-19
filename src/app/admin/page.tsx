@@ -63,6 +63,21 @@ export default function AdminPage() {
               </div>
             </div>
           </Link>
+          
+          <Link 
+            href="/admin/slider" 
+            className="block p-4 border rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-colors"
+          >
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                🎞️
+              </div>
+              <div>
+                <h3 className="font-medium text-gray-900">Slaideris</h3>
+                <p className="text-sm text-gray-500">Pārvaldīt mājas lapas slaiderus</p>
+              </div>
+            </div>
+          </Link>
         </div>
       </div>
     </div>

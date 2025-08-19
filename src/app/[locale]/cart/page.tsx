@@ -21,13 +21,14 @@ export default function CartPage() {
       hasUpdatedLogin.current = true;
       updateLastLogin();
     }
-  }, [user]); // Remove updateLastLogin from dependencies
+  }, [user]);
 
   const handleQuantityChange = (productId: string, newQuantity: number) => {
     if (newQuantity <= 0) {
       cart.removeItem(productId);
     } else {
       cart.updateQuantity(productId, newQuantity);
+      toast.showSuccess(t('quantityUpdated'));
     }
   };
 
@@ -142,7 +143,7 @@ export default function CartPage() {
                         {/* Price */}
                         <div className="text-center">
                           <span className="text-sm font-medium text-gray-900">
-                            €{item.price.toFixed(2)}
+                            €{Number(item.price).toFixed(2)}
                           </span>
                         </div>
 
@@ -172,7 +173,7 @@ export default function CartPage() {
                         {/* Total */}
                         <div className="text-center">
                           <span className="text-sm font-medium text-gray-900">
-                            €{(item.price * item.quantity).toFixed(2)}
+                            €{(Number(item.price) * item.quantity).toFixed(2)}
                           </span>
                         </div>
                       </div>

@@ -1,3 +1,4 @@
+import { HomeSlider } from '@/components/homepage/slider';
 import { HeroSection } from '@/components/homepage/hero-section';
 import { FeaturedCategories } from '@/components/homepage/featured-categories';
 import { FeaturedProducts } from '@/components/homepage/featured-products';
@@ -5,7 +6,7 @@ import { FeaturedProducts } from '@/components/homepage/featured-products';
 export default function HomePage() {
   return (
     <div>
-      <HeroSection />
+      <HomeSlider />
       <FeaturedCategories />
       <FeaturedProducts />
     </div>

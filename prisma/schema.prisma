@@ -339,3 +339,22 @@ model ProductAttribute {
   @@index([attributeTypeId])
   @@map("product_attributes")
 }
+
+model Slider {
+  id                String   @id @default(cuid())
+  title             String?  // Optional title for the slide
+  description       String?  // Optional description
+  desktopImageUrl   String   // Image for desktop view
+  mobileImageUrl    String   // Image for mobile view
+  linkUrl           String?  // Optional link when slide is clicked
+  sortOrder         Int      @default(0) // For ordering slides
+  isActive          Boolean  @default(true)
+  
+  // Timestamps
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([sortOrder])
+  @@index([isActive])
+  @@map("sliders")
+}
