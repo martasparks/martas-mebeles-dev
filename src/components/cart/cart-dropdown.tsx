@@ -81,7 +81,9 @@ export function CartDropdown() {
                         )}
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
-                          <p className="text-sm text-gray-500">€{item.price.toFixed(2)}</p>
+                          <p className="text-sm text-gray-500">
+                            €{Number(item.price).toFixed(2)}
+                          </p>
                           <div className="flex items-center space-x-2 mt-1">
                             <button
                               onClick={(e) => handleQuantityChange(item.productId, item.quantity - 1, e)}

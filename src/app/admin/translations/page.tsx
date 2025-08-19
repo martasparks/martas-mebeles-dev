@@ -220,7 +220,7 @@ export default function TranslationsPage() {
     }
 
     try {
-      const allTranslations = [];
+      const allTranslations: { key: string; locale: Locale; value: string; namespace?: string }[] = [];
       validFields.forEach(field => {
         if (field.valueLv) allTranslations.push({ key: field.key, locale: 'lv' as Locale, value: field.valueLv });
         if (field.valueEn) allTranslations.push({ key: field.key, locale: 'en' as Locale, value: field.valueEn });
@@ -266,11 +266,17 @@ export default function TranslationsPage() {
   // Filter translations based on search term
   const filteredTranslations = translations.filter(translation => {
     if (!searchTerm) return true;
-    
+
     const searchLower = searchTerm.toLowerCase();
-    return (
-      translation.key.toLowerCase().includes(searchLower) ||
-      translation.value.toLowerCase().includes(searchLower)
+
+    // Meklē pēc atslēgas
+    if (translation.key.toLowerCase().includes(searchLower)) return true;
+
+    // Meklē pēc tulkojuma vērtības (jebkurā valodā)
+    return translations.some(t =>
+      t.key === translation.key &&
+      t.value &&
+      t.value.toLowerCase().includes(searchLower)
     );
   });
 

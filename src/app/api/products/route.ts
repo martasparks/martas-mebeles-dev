@@ -83,3 +83,64 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+export async function POST(request: NextRequest) {
+  try {
+    const data = await request.json();
+    
+    const brand = await prisma.brand.findUnique({
+      where: { id: data.brandId }
+    });
+
+    if (!brand) {
+      return NextResponse.json({ error: "Brand not found" }, { status: 400 });
+    }
+
+    const updatedBrand = await prisma.brand.update({
+      where: { id: data.brandId },
+      data: { productCounter: { increment: 1 } }
+    });
+
+    const generatedCode = `${brand.code}-${String(updatedBrand.productCounter).padStart(3, "0")}`;
+
+    const product = await prisma.product.create({
+      data: {
+        name: data.name,
+        code: generatedCode,
+        slug: data.slug || data.name.toLowerCase().replace(/\s+/g, "-"),
+        shortDescription: data.shortDescription,
+        fullDescription: data.fullDescription,
+        metaTitle: data.metaTitle,
+        metaDescription: data.metaDescription,
+        price: data.price,
+        salePrice: data.salePrice,
+        stock: data.stock,
+        width: data.width,
+        height: data.height,
+        depth: data.depth,
+        weight: data.weight,
+        isVisible: data.isVisible,
+        isActive: data.isActive,
+        mainImageUrl: data.mainImageUrl,
+        imageUrls: data.imageUrls || [],
+        brand: {
+          connect: { id: data.brandId }
+        },
+        category: {
+          connect: { id: data.categoryId }
+        },
+        stockStatus: {
+          connect: { id: data.stockStatusId }
+        }
+      },
+    });
+
+    return NextResponse.json({ product });
+  } catch (error) {
+    console.error("Error creating product:", error);
+    return NextResponse.json(
+      { error: "Failed to create product" },
+      { status: 500 }
+    );
+  }
+}

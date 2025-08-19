@@ -530,7 +530,7 @@ export default function CheckoutPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
-                        <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
+                        <p className="text-sm text-gray-500">{t('quantity')}: {item.quantity}</p>
                       </div>
                       <div className="text-sm font-medium text-gray-900">
                         €{(item.price * item.quantity).toFixed(2)}
@@ -575,7 +575,7 @@ export default function CheckoutPage() {
                 
                 <div className="text-center mt-4">
                   <span className="text-xs text-gray-500">
-                    🚚 Bezmaksas piegāde visā Latvijā
+                    {t('afterCheckoutBtnText')}
                   </span>
                 </div>
               </div>

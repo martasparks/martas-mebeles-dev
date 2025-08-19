@@ -48,6 +48,9 @@ interface Product {
   id: string;
   code: string;
   name: string;
+  fullDescription?: string;
+  metaTitle?: string;
+  metaDescription?: string;
   shortDescription?: string;
   price: number;
   salePrice?: number;

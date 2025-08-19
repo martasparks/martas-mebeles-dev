@@ -203,10 +203,24 @@ export default function EditProductPage() {
     }
   };
 
-  const handleImageUploaded = (imageUrl: string) => {
+  const handleMainImageUploaded = (imageUrl: string) => {
     setFormData(prev => ({
       ...prev,
       mainImageUrl: imageUrl
+    }));
+  };
+
+  const handleAdditionalImageUploaded = (imageUrl: string) => {
+    setFormData(prev => ({
+      ...prev,
+      imageUrls: [...prev.imageUrls, imageUrl]
+    }));
+  };
+
+  const handleAdditionalImageDeleted = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      imageUrls: prev.imageUrls.filter((_, i) => i !== index)
     }));
   };
 
@@ -458,8 +472,31 @@ export default function EditProductPage() {
               )}
               <ImageUpload
                 currentImageUrl={formData.mainImageUrl}
-                onImageUploaded={handleImageUploaded}
+                onImageUploaded={handleMainImageUploaded}
                 onImageDeleted={handleImageDeleted}
+                folder="products"
+              />
+            </div>
+            <div className="mt-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Papildus attēli
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {formData.imageUrls.map((url, index) => (
+                  <div key={index} className="relative">
+                    <img src={url} alt={`Papildus ${index+1}`} className="w-full h-32 object-cover rounded border" />
+                    <button
+                      type="button"
+                      onClick={() => handleAdditionalImageDeleted(index)}
+                      className="absolute top-1 right-1 bg-red-600 text-white text-xs px-2 py-1 rounded"
+                    >
+                      Dzēst
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <ImageUpload
+                onImageUploaded={handleAdditionalImageUploaded}
                 folder="products"
               />
             </div>

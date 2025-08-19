@@ -61,7 +61,7 @@ export async function PUT(
         categoryId: data.categoryId,
         stockStatusId: data.stockStatusId,
         mainImageUrl: data.mainImageUrl,
-        imageUrls: data.imageUrls,
+        imageUrls: Array.isArray(data.imageUrls) ? data.imageUrls : [],
       },
     });
 

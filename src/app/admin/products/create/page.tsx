@@ -39,7 +39,10 @@ export default function CreateProductPage() {
   const [formData, setFormData] = useState({
     name: '',
     shortDescription: '',
-    description: '',
+    fullDescription: '',
+    metaTitle: '',
+    metaDescription: '',
+    slug: '',
     price: '',
     salePrice: '',
     stock: '0',
@@ -124,9 +127,8 @@ export default function CreateProductPage() {
         throw new Error(error.error || 'Failed to create product');
       }
 
-      const result = await response.json();
       toast.showSuccess('Produkts veiksmīgi izveidots');
-      router.push(`/admin/products/${result.product.id}`);
+      router.push("/admin/products");
     } catch (error) {
       console.error('Error creating product:', error);
       toast.showError(error instanceof Error ? error.message : 'Neizdevās izveidot produktu');
@@ -135,10 +137,24 @@ export default function CreateProductPage() {
     }
   };
 
-  const handleImageUploaded = (imageUrl: string) => {
+  const handleMainImageUploaded = (imageUrl: string) => {
     setFormData(prev => ({
       ...prev,
       mainImageUrl: imageUrl
+    }));
+  };
+
+  const handleAdditionalImageUploaded = (imageUrl: string) => {
+    setFormData(prev => ({
+      ...prev,
+      imageUrls: [...prev.imageUrls, imageUrl]
+    }));
+  };
+
+  const handleAdditionalImageDeleted = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      imageUrls: prev.imageUrls.filter((_, i) => i !== index)
     }));
   };
 
@@ -261,8 +277,8 @@ export default function CreateProductPage() {
                   Pilns apraksts
                 </label>
                 <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  value={formData.fullDescription}
+                  onChange={(e) => setFormData(prev => ({ ...prev, fullDescription: e.target.value }))}
                   rows={4}
                   className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -339,14 +355,38 @@ export default function CreateProductPage() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Galvenais attēls
               </label>
-              <ImageUpload
-                currentImageUrl={formData.mainImageUrl}
-                onImageUploaded={handleImageUploaded}
-                onImageDeleted={handleImageDeleted}
-                folder="products"
-              />
+                <ImageUpload
+                  currentImageUrl={formData.mainImageUrl}
+                  onImageUploaded={handleMainImageUploaded}
+                  onImageDeleted={handleImageDeleted}
+                  folder="products"
+                />
             </div>
           </div>
+
+          <div className="mt-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Papildus attēli
+            </label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {formData.imageUrls.map((url, index) => (
+                <div key={index} className="relative">
+                  <img src={url} alt={`Papildus ${index+1}`} className="w-full h-32 object-cover rounded border" />
+                  <button
+                    type="button"
+                    onClick={() => handleAdditionalImageDeleted(index)}
+                    className="absolute top-1 right-1 bg-red-600 text-white text-xs px-2 py-1 rounded"
+                  >
+                    Dzēst
+                  </button>
+                </div>
+              ))}
+            </div>
+            <ImageUpload
+              onImageUploaded={handleAdditionalImageUploaded}
+              folder="products"
+            />
+        </div>
 
           {/* Dimensions */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
